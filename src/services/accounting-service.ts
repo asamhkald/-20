@@ -88,6 +88,24 @@ export type RegisterCashboxInput = Readonly<{
   currency: "USD" | "SYP";
 }>;
 
+export type ModuleJournalLineInput = Readonly<{
+  accountCode?: string;
+  accountId?: string;
+  description?: string;
+  debitMinor: bigint;
+  creditMinor: bigint;
+}>;
+
+export type ModuleJournalInput = Readonly<{
+  idempotencyKey: string;
+  businessDate: string;
+  entryPrefix: string;
+  currency: "USD" | "SYP";
+  memo: string;
+  lines: readonly ModuleJournalLineInput[];
+  requiredPermission?: Permission;
+}>;
+
 export type WorkspaceSnapshot = Readonly<{
   accounts: readonly LedgerAccount[];
   cashboxes: readonly Cashbox[];
@@ -213,6 +231,59 @@ export class AccountingWorkspaceService {
     validateCashbox(cashbox, accountsMap);
     this.store.saveCashbox(actor.tenantId, cashbox);
     return cashbox;
+  }
+
+  getCashbox(actor: TenantContext, cashboxId: string): Cashbox {
+    return this.resolveCashbox(actor.tenantId, cashboxId);
+  }
+
+  postModuleJournal(actor: TenantContext, input: ModuleJournalInput): JournalEntry {
+    assertPermission(actor, input.requiredPermission ?? "finance.post");
+    const cleanKey = input.idempotencyKey.trim();
+    if (!cleanKey) throw new Error("Idempotency key is required.");
+    const existing = this.store.findJournalByIdempotencyKey(actor.tenantId, cleanKey);
+    if (existing) return existing;
+
+    const currencyDef = this.getCurrencyDef(input.currency);
+    const context = this.buildContext(actor.tenantId);
+    const nowIso = new Date().toISOString();
+    const entryId = generateHiddenUuid();
+    const prefix = input.entryPrefix.trim().toUpperCase() || "JE";
+    const entryNumber = `${prefix}-${String(this.store.listJournals(actor.tenantId).length + 1).padStart(4, "0")}`;
+
+    const resolvedLines: JournalLine[] = input.lines.map((line, idx) => {
+      const accountId = line.accountId
+        ? line.accountId
+        : line.accountCode
+          ? this.findAccountByCode(context, line.accountCode)
+          : "";
+      if (!accountId) throw new Error(`Journal line ${idx + 1} requires accountCode or accountId.`);
+      return {
+        id: `${entryId}-l${idx + 1}`,
+        accountId,
+        description: line.description,
+        debitMinor: line.debitMinor,
+        creditMinor: line.creditMinor,
+        currency: currencyDef.code,
+      };
+    });
+
+    const posted = postJournalDraft(
+      { id: entryId, tenantId: actor.tenantId, entryNumber, memo: input.memo.trim() || prefix, status: "draft", businessDate: input.businessDate, occurredAt: nowIso, createdAt: nowIso, lines: resolvedLines },
+      nowIso,
+      context,
+    );
+
+    this.store.savePostedJournal(actor.tenantId, cleanKey, posted, {
+      id: generateHiddenUuid(),
+      tenantId: actor.tenantId,
+      userId: actor.userId,
+      action: "journal.posted",
+      entityId: posted.id,
+      occurredAt: nowIso,
+      summary: `${posted.entryNumber}: ${posted.memo}`,
+    });
+    return posted;
   }
 
   getCashboxStatement(actor: TenantContext, cashboxId: string): CashboxStatement {
