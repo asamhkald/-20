@@ -1,0 +1,19 @@
+{
+  "name": "سما الشام كلاود - النظام المالي السحابي الموحد لإدارة الأعمال",
+  "short_name": "سما الشام",
+  "description": "النظام المالي السحابي الموحد لإدارة الأعمال",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1220",
+  "theme_color": "#0284c7",
+  "dir": "rtl",
+  "lang": "ar",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

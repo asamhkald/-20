@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B192C" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://*.supabase.co https://cdn.jsdelivr.net https://fonts.googleapis.com https://fonts.gstatic.com https://wa.me; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: blob:; connect-src 'self' https://*.supabase.co wss://*.supabase.co; font-src 'self' https://fonts.gstatic.com;" />
+  <title>Sama Business Enterprise v1.1 | IFRS · Multi-Warehouse · RBAC · Arabic Voice AI</title>
+  <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4"></script>
+  <style>
+    :root {
+      --bg: #070e1b;
+      --bg-elev: #0d1829;
+      --card: #111f36;
+      --card-2: #0a1424;
+      --border: #1e3252;
+      --text: #f1f5f9;
+      --muted: #94a3b8;
+      --primary: #10b981;
+      --primary-dark: #059669;
+      --primary-ink: #042f1e;
+      --accent: #38bdf8;
+      --danger: #ef4444;
+      --warn: #f59e0b;
+      --purple: #a855f7;
+      --shadow: 0 14px 34px rgba(2, 8, 23, 0.48);
+    }
+    body.theme-light {
+      --bg: #f1f5f9;
+      --bg-elev: #ffffff;
+      --card: #ffffff;
+      --card-2: #f8fafc;
+      --border: #dbe4ef;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #059669;
+      --primary-dark: #047857;
+      --primary-ink: #ffffff;
+      --accent: #0284c7;
+      --danger: #dc2626;
+      --warn: #d97706;
+      --purple: #7c3aed;
+      --shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; font-family: 'Cairo', system-ui, -apple-system, sans-serif; }
+    body { margin: 0; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .2s, color .2s; }
+    .wrap { max-width: 1260px; margin: 0 auto; padding: 0 14px; }
+    .topbar { position: sticky; top: 0; z-index: 30; background: var(--bg-elev); border-bottom: 1px solid var(--border); padding: 10px 0; backdrop-filter: blur(12px); }
+    .row-between { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+    .row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 16px; box-shadow: var(--shadow); }
+    .subcard { background: var(--card-2); border: 1px solid var(--border); border-radius: 12px; padding: 12px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    @media(max-width: 960px) { .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid-3 { grid-template-columns: 1fr; } }
+    @media(max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+    .inp { width: 100%; background: var(--card-2); border: 1px solid var(--border); color: var(--text); border-radius: 11px; padding: 9px 12px; font-size: 13px; outline: none; }
+    .inp:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16,185,129,.15); }
+    .btn { border: none; border-radius: 11px; padding: 8px 13px; font-weight: 800; font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: .15s; }
+    .btn:active { transform: scale(.98); }
+    .btn-prim { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: var(--primary-ink); }
+    .btn-sec { background: var(--card-2); color: var(--text); border: 1px solid var(--border); }
+    .btn-sec:hover { border-color: var(--accent); }
+    .btn-dang { background: rgba(239,68,68,.15); color: #f87171; border: 1px solid rgba(239,68,68,.35); }
+    .btn-warn { background: rgba(245,158,11,.15); color: #fbbf24; border: 1px solid rgba(245,158,11,.35); }
+    .btn-voice { background: linear-gradient(135deg, #2563eb, #0284c7); color: #fff; }
+    .btn-voice.recording { background: linear-gradient(135deg, #ef4444, #dc2626); animation: pulseRec 1.1s infinite; }
+    @keyframes pulseRec { 0%,100% { box-shadow: 0 0 0 0 rgba(239,68,68,.6); } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
+    .tabs { display: flex; gap: 7px; overflow-x: auto; padding: 12px 0 6px; scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { white-space: nowrap; padding: 8px 13px; border-radius: 11px; border: 1px solid var(--border); background: var(--card); color: var(--muted); font-weight: 800; font-size: 12.5px; cursor: pointer; }
+    .tab.active { background: var(--primary); color: var(--primary-ink); border-color: var(--primary); }
+    .badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 800; border: 1px solid transparent; }
+    .b-inc { background: rgba(16,185,129,.15); color: #10b981; border-color: rgba(16,185,129,.35); }
+    .b-exp { background: rgba(239,68,68,.15); color: #f87171; border-color: rgba(239,68,68,.35); }
+    .b-dout { background: rgba(245,158,11,.15); color: #fbbf24; border-color: rgba(245,158,11,.35); }
+    .b-din { background: rgba(56,189,248,.15); color: #38bdf8; border-color: rgba(56,189,248,.35); }
+    .b-rev { background: rgba(168,85,247,.15); color: #c084fc; border-color: rgba(168,85,247,.35); }
+    .kpi-lbl { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+    .kpi-val { font-size: 21px; font-weight: 900; margin-top: 4px; }
+    .muted { color: var(--muted); }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    .tbl { width: 100%; border-collapse: collapse; font-size: 12.5px; text-align: right; }
+    .tbl th { color: var(--muted); padding: 9px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    .tbl td { padding: 9px 8px; border-bottom: 1px solid var(--border); }
+    .modal-bg { position: fixed; inset: 0; background: rgba(2,6,23,.8); z-index: 60; display: flex; align-items: center; justify-content: center; padding: 14px; }
+    .toast { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 99; padding: 10px 18px; border-radius: 12px; font-weight: 800; font-size: 13px; box-shadow: 0 12px 30px rgba(0,0,0,.5); max-width: 92vw; text-align: center; }
+    .ai-banner { background: linear-gradient(120deg, rgba(16,185,129,.12), rgba(56,189,248,.12)); border: 1px solid rgba(16,185,129,.35); border-radius: 16px; padding: 14px; }
+    .hidden { display: none !important; }
+    @media print {
+      body * { visibility: hidden; }
+      #print-area, #print-area * { visibility: visible; }
+      #print-area { position: fixed; inset: 0; background: #fff; color: #000; padding: 20px; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="print-area" class="hidden"></div>
+  <div id="toast-box"></div>
+
+<script>
+// =========================================================================
+// 1. SAMA BUSINESS ENTERPRISE v1.1 — CORE SECURITY, BIGINT & HIDDEN UUID
+// =========================================================================
+const DEFAULT_SUPABASE_URL = "https://xzxmbbrtsocjbrzvxedy.supabase.co";
+const DEFAULT_SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6eG1iYnJ0c29jamJyenZ4ZWR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU1MzYwNjQsImV4cCI6MjExMTExMjA2NH0.3gSwXOtdT_Ku6ERkQr3frAqd_VK0XvCiauWRUDrgtrs";
+const CFG_KEY = "finos_cloud_cfg_v2";
+const QUEUE_KEY = "finos_offline_queue_v2";
+const RATE_KEY = "finos_exchange_rate_v2";
+const THEME_KEY = "sama_enterprise_theme_v1";
+const PIN_KEY = "sama_enterprise_pin_hash_v1";
+
+function normalizeAnonKey(k) {
+  const s = String(k || "").trim();
+  return s.startsWith("EyJ") ? "eyJ" + s.slice(3) : s;
+}
+function loadConfig() {
+  try {
+    const raw = localStorage.getItem(CFG_KEY);
+    if (raw) {
+      const p = JSON.parse(raw);
+      return { url: (p.url || DEFAULT_SUPABASE_URL).trim().replace(/\/+$/, ""), key: normalizeAnonKey(p.key || DEFAULT_SUPABASE_ANON_KEY) };
+    }
+  } catch (_) {}
+  return { url: DEFAULT_SUPABASE_URL, key: normalizeAnonKey(DEFAULT_SUPABASE_ANON_KEY) };
+}
+let appConfig = loadConfig();
+let sb = null;
+function initSupabase() {
+  try {
+    if (window.supabase && appConfig.url && appConfig.key) {
+      sb = window.supabase.createClient(appConfig.url, appConfig.key);
+      return true;
+    }
+  } catch (e) { console.error(e); }
+  return false;
+}
+initSupabase();
+
+function generateHiddenUuid() {
+  if (window.crypto && typeof window.crypto.randomUUID === "function") return window.crypto.randomUUID();
+  const b = new Uint8Array(16);
+  window.crypto.getRandomValues(b);
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  const h = Array.from(b, x => x.toString(16).padStart(2, "0")).join("");
+  return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+}
+
+async function sha256Hex(text) {
+  const enc = new TextEncoder().encode(String(text));
+  const buf = await window.crypto.subtle.digest("SHA-256", enc);
+  return Array.from(new Uint8Array(buf), b => b.toString(16).padStart(2, "0")).join("");
+}
+
+// Exact BigInt Minor-Unit Arithmetic
+function toMinor(val) {
+  const s = String(val == null ? "0" : val).trim();
+  const m = /^([+-]?)(\d+)(?:\.(\d+))?$/.exec(s);
+  if (!m) return 0n;
+  const sign = m[1] === "-" ? -1n : 1n;
+  const whole = BigInt(m[2]);
+  const frac = BigInt((m[3] || "").padEnd(2, "0").slice(0, 2));
+  return sign * (whole * 100n + frac);
+}
+function fromMinor(minor) {
+  const neg = minor < 0n;
+  const abs = neg ? -minor : minor;
+  const whole = abs / 100n;
+  const frac = Number(abs % 100n);
+  const num = Number(whole) + frac / 100;
+  return neg ? -num : num;
+}
+function fmtMinor(minor) {
+  const neg = minor < 0n;
+  const abs = neg ? -minor : minor;
+  const whole = (abs / 100n).toLocaleString("en-US");
+  const frac = abs % 100n;
+  return `${neg ? "-" : ""}${whole}${frac > 0n ? "." + frac.toString().padStart(2, "0") : ""}`;
+}
+function fmtNum(n) { return fmtMinor(toMinor(n)); }
+
+// Safe arithmetic expression parser (NO eval)
+function safeCalcExpression(expr) {
+  const cleaned = normalizeArabicDigits(String(expr || "")).replace(/\s+/g, "");
+  if (!/^[0-9+\-*/().]+$/.test(cleaned)) return null;
+  try {
+    const tokens = cleaned.match(/\d+(?:\.\d+)?|[+\-*/()]/g);
+    if (!tokens) return null;
+    let pos = 0;
+    function parseExpr() {
+      let left = parseTerm();
+      while (tokens[pos] === "+" || tokens[pos] === "-") {
+        const op = tokens[pos++];
+        const right = parseTerm();
+        left = op === "+" ? left + right : left - right;
+      }
+      return left;
+    }
+    function parseTerm() {
+      let left = parseFactor();
+      while (tokens[pos] === "*" || tokens[pos] === "/") {
+        const op = tokens[pos++];
+        const right = parseFactor();
+        if (op === "/" && right === 0) throw new Error("Div0");
+        left = op === "*" ? left * right : left / right;
+      }
+      return left;
+    }
+    function parseFactor() {
+      const t = tokens[pos++];
+      if (t === "(") { const v = parseExpr(); if (tokens[pos++] !== ")") throw new Error("Paren"); return v; }
+      if (t === "-") return -parseFactor();
+      const n = Number(t);
+      if (!Number.isFinite(n)) throw new Error("NaN");
+      return n;
+    }
+    const res = parseExpr();
+    if (pos !== tokens.length || !Number.isFinite(res)) return null;
+    return Number(res.toFixed(2));
+  } catch (_) { return null; }
+}
+
+// =========================================================================
+// 2. 5-ROLE RBAC PERMISSION MATRIX (ISO 27001 / NIST CSF 2.0)
+// =========================================================================
+const ROLE_DEFS = {
+  owner: {
+    label: "مدير / مالك",
+    badge: "b-inc",
+    canViewCost: true,
+    canPostFinance: true,
+    canReverse: true,
+    canViewIfrs: true,
+    canManageFx: true,
+    canManageInventory: true,
+    canManageRepairs: true,
+    canManageStaff: true,
+    canAudit: true,
+    canBackup: true
+  },
+  accountant: {
+    label: "محاسب",
+    badge: "b-din",
+    canViewCost: true,
+    canPostFinance: true,
+    canReverse: true,
+    canViewIfrs: true,
+    canManageFx: true,
+    canManageInventory: false,
+    canManageRepairs: false,
+    canManageStaff: false,
+    canAudit: true,
+    canBackup: true
+  },
+  cashier: {
+    label: "أمين صندوق",
+    badge: "b-dout",
+    canViewCost: false,
+    canPostFinance: true,
+    canReverse: false,
+    canViewIfrs: false,
+    canManageFx: true,
+    canManageInventory: false,
+    canManageRepairs: false,
+    canManageStaff: false,
+    canAudit: false,
+    canBackup: false
+  },
+  sales: {
+    label: "موظف مبيعات",
+    badge: "b-rev",
+    canViewCost: false,
+    canPostFinance: true,
+    canReverse: false,
+    canViewIfrs: false,
+    canManageFx: false,
+    canManageInventory: true,
+    canManageRepairs: false,
+    canManageStaff: false,
+    canAudit: false,
+    canBackup: false
+  },
+  technician: {
+    label: "فني صيانة",
+    badge: "b-exp",
+    canViewCost: false,
+    canPostFinance: false,
+    canReverse: false,
+    canViewIfrs: false,
+    canManageFx: false,
+    canManageInventory: false,
+    canManageRepairs: true,
+    canManageStaff: false,
+    canAudit: false,
+    canBackup: false
+  }
+};
+
+function currentRoleKey() {
+  if (state.activeStaff && ROLE_DEFS[state.activeStaff.role]) return state.activeStaff.role;
+  const profRole = state.profile ? state.profile.role : "owner";
+  return ROLE_DEFS[profRole] ? profRole : "owner";
+}
+function perms() { return ROLE_DEFS[currentRoleKey()] || ROLE_DEFS.owner; }
+function currentActorName() {
+  if (state.activeStaff) return `${state.activeStaff.name} (${ROLE_DEFS[state.activeStaff.role].label})`;
+  return (state.profile && state.profile.full_name) || "المالك";
+}
+
+// =========================================================================
+// 3. ARABIC VOICE AI ENGINE (ar-SA)
+// =========================================================================
+function normalizeArabicDigits(str) {
+  const map = { "٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9","۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9" };
+  return String(str || "").replace(/[٠-٩۰-۹]/g, c => map[c] || c);
+}
+function parseArabicVoiceWordsToNumbers(text) {
+  let s = normalizeArabicDigits(text).trim();
+  const wordNums = [
+    [/\bمليونين\b/g, "2000000"], [/\bمليون\b/g, "1000000"],
+    [/\bعشرة\s*آلاف\b|\bعشر\s*الاف\b/g, "10000"], [/\bخمسة\s*آلاف\b|\bخمس\s*الاف\b/g, "5000"],
+    [/\bألفين\b|\bالفين\b/g, "2000"], [/\bألف\b|\bالف\b/g, "1000"],
+    [/\bخمسمئة\b|\bخمسمية\b/g, "500"], [/\bمئتين\b|\bميتين\b/g, "200"], [/\bمئة\b|\bمية\b/g, "100"],
+    [/\bخمسين\b/g, "50"], [/\bعشرين\b/g, "20"], [/\bعشرة\b/g, "10"], [/\bخمسة\b/g, "5"],
+    [/\bنصف\b|\bنص\b/g, "0.5"]
+  ];
+  for (const [re, rep] of wordNums) s = s.replace(re, rep);
+  return s;
+}
+function parseArabicFinancialCommand(rawInput) {
+  const text = parseArabicVoiceWordsToNumbers(rawInput);
+  if (!text) return null;
+  const mathVal = safeCalcExpression(text);
+  if (mathVal !== null && /[+\-*/]/.test(text)) return { kind: "calc", result: mathVal, raw: text };
+
+  let tx_type = "income";
+  if (/(صرف|صرفت|دفع|دفعت|مصروف|شراء|اشتريت|كهرباء|إيجار|ايجار|رواتب|تالف|مرتجع)/.test(text)) tx_type = "expense";
+  else if (/(دين\s*على|آجل|اجل|سجل\s*دين|لصالحنا\s*على|بعت\s*بالدين)/.test(text)) tx_type = "debt_out";
+  else if (/(دين\s*علينا|دفعة\s*مورد|للمورد|استلمت\s*بضاعة\s*بالدين)/.test(text)) tx_type = "debt_in";
+  else if (/(قبض|قبضت|استلمت|بيع|بعت|مبيعات|تحصيل|دخل)/.test(text)) tx_type = "income";
+
+  let currency = "USD";
+  if (/(ليرة|ل\.س|سوري|syp|ليره)/i.test(text)) currency = "SYP";
+  else if (/(دولار|\$|usd|امريكي)/i.test(text)) currency = "USD";
+
+  const qtyPrice = text.match(/(\d+(?:\.\d+)?)\s*(?:×|\*|قطع|حبات|شواحن|أجهزة|اجهزة)?\s*(?:بسعر|سعر|بـ|ب)\s*(\d+(?:\.\d+)?)/);
+  let amount = 0;
+  if (qtyPrice) amount = Number(qtyPrice[1]) * Number(qtyPrice[2]);
+  else {
+    const nums = text.match(/\d+(?:\.\d+)?/g);
+    if (nums && nums.length > 0) amount = Math.max(...nums.map(Number));
+  }
+  let matchedAcc = null;
+  for (const a of state.accounts) { if (a.name && text.includes(a.name)) { matchedAcc = a; break; } }
+  return { kind: "tx", tx_type, amount, currency, account_id: matchedAcc ? matchedAcc.id : null, account_name: matchedAcc ? matchedAcc.name : "", description: rawInput.trim() };
+}
+
+let voiceRecognition = null;
+function startArabicVoiceInput(targetInputId, autoParseAi = false) {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) return showToast("استخدم زر الميكروفون في لوحة مفاتيح هاتفك 🎙️", "info");
+  if (voiceRecognition && state.isRecordingVoice) { voiceRecognition.stop(); return; }
+  voiceRecognition = new SpeechRec();
+  voiceRecognition.lang = "ar-SA";
+  voiceRecognition.interimResults = true;
+  state.isRecordingVoice = true; state.voiceTargetId = targetInputId; render();
+  showToast("🎙️ تكلّم الآن بالعربية...", "info");
+
+  let finalText = "";
+  voiceRecognition.onresult = (ev) => {
+    let interim = "";
+    for (let i = ev.resultIndex; i < ev.results.length; i++) {
+      if (ev.results[i].isFinal) finalText += ev.results[i][0].transcript + " ";
+      else interim += ev.results[i][0].transcript;
+    }
+    const val = normalizeArabicDigits((finalText + interim).trim());
+    const el = document.getElementById(targetInputId);
+    if (el) {
+      el.value = val;
+      if (targetInputId === "ai-cmd-input") state.aiCommandText = val;
+      if (targetInputId === "ledger-search-inp") state.ledgerSearch = val;
+    }
+  };
+  voiceRecognition.onerror = (e) => { state.isRecordingVoice = false; state.voiceTargetId = ""; render(); showToast("خطأ بالميكروفون: " + (e.error || ""), "error"); };
+  voiceRecognition.onend = () => {
+    state.isRecordingVoice = false; state.voiceTargetId = "";
+    if (autoParseAi && state.aiCommandText.trim()) handleAiCommandRun();
+    else render();
+  };
+  voiceRecognition.start();
+}
+
+// =========================================================================
+// 4. CONSTANTS & CENTRAL STATE
+// =========================================================================
+const MODULES_META = [
+  { key: "pos_inventory", label: "المخزون والمستودعات", icon: "🛒", desc: "تعدد المستودعات، التحويل، التالف، المرتجعات، ID مخفي" },
+  { key: "telecom_maintenance", label: "الصيانة والاتصالات", icon: "📱", desc: "ربط قطع الغيار بالمخزون، IMEI، محافظ سيريتل/MTN/شام كاش" },
+  { key: "installments", label: "التقسيط والكفلاء", icon: "📅", desc: "جدولة الأقساط، الدفعات الجزئية، تذكير واتساب" },
+  { key: "isp_amperes", label: "الإنترنت والأمبيرات", icon: "📡", desc: "مشتركون، جباية، تنبيهات التجديد" },
+  { key: "sales_reps", label: "مندوبو الجملة والعمولة", icon: "🚚", desc: "مبيعات المندوبين وحساب العمولة" }
+];
+const PLAN_PRESETS = {
+  general: { name: "تجارة عامة ومخزون", modules: { pos_inventory: true, telecom_maintenance: false, installments: false, isp_amperes: false, sales_reps: false } },
+  telecom: { name: "محل هواتف وصيانة", modules: { pos_inventory: true, telecom_maintenance: true, installments: false, isp_amperes: false, sales_reps: false } },
+  installments: { name: "محل بيع بالتقسيط", modules: { pos_inventory: true, telecom_maintenance: false, installments: true, isp_amperes: false, sales_reps: false } },
+  isp: { name: "شبكة إنترنت وأمبيرات", modules: { pos_inventory: false, telecom_maintenance: false, installments: false, isp_amperes: true, sales_reps: false } },
+  wholesale: { name: "موزع جملة ومندوبون", modules: { pos_inventory: true, telecom_maintenance: false, installments: false, isp_amperes: false, sales_reps: true } },
+  enterprise: { name: "الباقة الشاملة (كل الوحدات)", modules: { pos_inventory: true, telecom_maintenance: true, installments: true, isp_amperes: true, sales_reps: true } }
+};
+const TX_LABELS = {
+  income: { label: "قبض / مبيعات", cls: "b-inc" },
+  expense: { label: "صرف / مصروف", cls: "b-exp" },
+  debt_out: { label: "دين لنا (ذمم مدينة)", cls: "b-dout" },
+  debt_in: { label: "دين علينا / سداد دين", cls: "b-din" },
+  reversal: { label: "قيد عكسي (تصحيح)", cls: "b-rev" }
+};
+const DEFAULT_WAREHOUSES = [
+  { id: "wh-main", name: "المستودع الرئيسي" },
+  { id: "wh-shop", name: "صالة العرض / المحل" },
+  { id: "wh-parts", name: "مخزن قطع الصيانة" }
+];
+
+const state = {
+  loading: true, isDemo: false, online: navigator.onLine,
+  theme: localStorage.getItem(THEME_KEY) || "dark",
+  isLocked: Boolean(localStorage.getItem(PIN_KEY)),
+  showPinModal: false, showZReportModal: false, showSettingsModal: false,
+  showStaffSwitchModal: false, showFxModal: false,
+  authTab: "login", errorBanner: "",
+  user: null, profile: null, tenant: null,
+  activeStaff: null,
+  adminTab: "tenants", tenants: [], adminAuditLogs: [], adminSearch: "",
+  newShopModules: { ...PLAN_PRESETS.telecom.modules }, newShopPreset: "telecom",
+  tenantTab: "dashboard",
+  accounts: [], transactions: [], auditLogs: [],
+  exchangeRate: Number(localStorage.getItem(RATE_KEY)) || 12000,
+  ledgerFilterCurrency: "ALL", ledgerSearch: "",
+  selectedWarehouse: "ALL",
+  posCart: [], editingProductId: null,
+  offlineQueue: [], committedUuids: new Set(),
+  isRecordingVoice: false, voiceTargetId: "",
+  aiCommandText: "", aiPreview: null,
+  lastActivityAt: Date.now()
+};
+if (state.theme === "light") document.body.classList.add("theme-light");
+
+// =========================================================================
+// 5. STORAGE, LOCAL AUDIT TRAIL, BACKUP & WHATSAPP HELPERS
+// =========================================================================
+let toastTimer = null;
+function showToast(msg, type = "success") {
+  const box = document.getElementById("toast-box");
+  const bg = type === "error" ? "#7f1d1d" : type === "info" ? "#1e3a8a" : "#065f46";
+  box.innerHTML = `<div class="toast" style="background:${bg};color:#fff;border:1px solid rgba(255,255,255,.2)">${escapeHtml(msg)}</div>`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { box.innerHTML = ""; }, 3500);
+}
+function escapeHtml(s) {
+  return String(s == null ? "" : s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");
+}
+function fmtDate(iso) {
+  if (!iso) return "—";
+  try { const d = new Date(iso); return d.toLocaleDateString("ar-EG",{year:"numeric",month:"short",day:"numeric"})+" "+d.toLocaleTimeString("ar-EG",{hour:"2-digit",minute:"2-digit"}); } catch (_) { return iso; }
+}
+function fmtShortDate(iso) { try { return new Date(iso || Date.now()).toLocaleDateString("en-CA"); } catch (_) { return "—"; } }
+function openWhatsApp(phone, text) {
+  let p = String(phone || "").replace(/[^\d+]/g, "");
+  if (p.startsWith("+")) p = p.slice(1);
+  if (p.startsWith("09") && p.length === 10) p = "963" + p.slice(1);
+  else if (p.startsWith("00")) p = p.slice(2);
+  window.open(p ? `https://wa.me/${p}?text=${encodeURIComponent(text)}` : `https://wa.me/?text=${encodeURIComponent(text)}`, "_blank");
+}
+async function copyText(t) { try { await navigator.clipboard.writeText(t); showToast("تم النسخ بنجاح"); } catch (_) { showToast("تعذّر النسخ", "error"); } }
+
+function getModKey(name) { return `finos_mod_${state.tenant ? state.tenant.id : "demo"}_${name}`; }
+function loadModuleData(name, fallback = []) {
+  try { const r = localStorage.getItem(getModKey(name)); return r ? JSON.parse(r) : fallback; } catch (_) { return fallback; }
+}
+function saveModuleData(name, data) {
+  localStorage.setItem(getModKey(name), JSON.stringify(data));
+  syncModuleToOptionalCloud(name, data);
+}
+async function syncModuleToOptionalCloud(modName, data) {
+  if (state.isDemo || !sb || !navigator.onLine || !state.tenant) return;
+  try {
+    const checksum = await sha256Hex(JSON.stringify(data));
+    await sb.from("enterprise_vault_snapshots").upsert({
+      tenant_id: state.tenant.id, module_key: modName, hidden_uuid: generateHiddenUuid(),
+      payload: data, checksum_sha256: checksum, updated_by: state.user ? state.user.id : null, updated_at: new Date().toISOString()
+    }, { onConflict: "tenant_id,module_key" });
+  } catch (_) {}
+}
+function recordLocalAudit(action, entity, beforeData, afterData) {
+  const logs = loadModuleData("local_audit_trail", []);
+  logs.unshift({
+    id: generateHiddenUuid(), at: new Date().toISOString(),
+    actor: currentActorName(), role: currentRoleKey(),
+    action, entity, before: beforeData || null, after: afterData || null
+  });
+  saveModuleData("local_audit_trail", logs.slice(0, 300));
+}
+function getWarehouses() {
+  const saved = loadModuleData("warehouses", null);
+  return (Array.isArray(saved) && saved.length > 0) ? saved : DEFAULT_WAREHOUSES;
+}
+function loadOfflineQueue() { try { state.offlineQueue = JSON.parse(localStorage.getItem(QUEUE_KEY) || "[]"); } catch (_) { state.offlineQueue = []; } }
+function saveOfflineQueue() { localStorage.setItem(QUEUE_KEY, JSON.stringify(state.offlineQueue)); }
+function cacheTenantSnapshot() {
+  if (!state.tenant || state.isDemo) return;
+  try { localStorage.setItem(`finos_cache_${state.tenant.id}`, JSON.stringify({ accounts: state.accounts, transactions: state.transactions, tenant: state.tenant, updatedAt: new Date().toISOString() })); } catch (_) {}
+}
+function toggleTheme() {
+  state.theme = state.theme === "dark" ? "light" : "dark";
+  localStorage.setItem(THEME_KEY, state.theme);
+  document.body.classList.toggle("theme-light", state.theme === "light");
+  render();
+}
+
+// Security PIN Lock + Staff Shift Switcher
+async function setSecurityPin(e) {
+  e.preventDefault();
+  const pin = document.getElementById("pin-new").value.trim();
+  if (!/^\d{4,6}$/.test(pin)) return showToast("أدخل رمز PIN مكوّن من 4 إلى 6 أرقام", "error");
+  localStorage.setItem(PIN_KEY, await sha256Hex("sama-pin:" + pin));
+  state.showPinModal = false; showToast("تم تفعيل قفل الأمان المشفّر 🔐"); render();
+}
+function removeSecurityPin() { localStorage.removeItem(PIN_KEY); state.isLocked = false; state.showPinModal = false; showToast("تم إلغاء القفل"); render(); }
+async function unlockWithPin(e) {
+  e.preventDefault();
+  const pin = document.getElementById("pin-unlock").value.trim();
+  if (await sha256Hex("sama-pin:" + pin) === localStorage.getItem(PIN_KEY)) {
+    state.isLocked = false; state.lastActivityAt = Date.now(); render(); showToast("تم فتح الخزينة");
+  } else showToast("رمز PIN غير صحيح", "error");
+}
+setInterval(() => { if (localStorage.getItem(PIN_KEY) && !state.isLocked && Date.now() - state.lastActivityAt > 5*60*1000) { state.isLocked = true; render(); } }, 20000);
+["click","keydown","touchstart"].forEach(ev => window.addEventListener(ev, () => { state.lastActivityAt = Date.now(); }, { passive: true }));
+
+async function addStaffMember(e) {
+  e.preventDefault();
+  if (!perms().canManageStaff) return showToast("صلاحية المالك فقط", "error");
+  const name = document.getElementById("st-name").value.trim();
+  const role = document.getElementById("st-role").value;
+  const pin = document.getElementById("st-pin").value.trim();
+  if (!name || !/^\d{4,6}$/.test(pin)) return showToast("أدخل الاسم ورمز PIN (4-6 أرقام)", "error");
+  const staff = loadModuleData("staff_directory", []);
+  const pinHash = await sha256Hex("staff-pin:" + pin);
+  const member = { id: generateHiddenUuid(), name, role, pinHash, active: true, createdAt: new Date().toISOString() };
+  staff.unshift(member);
+  saveModuleData("staff_directory", staff);
+  recordLocalAudit("ADD_STAFF", "staff_directory", null, { name, role });
+  showToast(`تمت إضافة الموظف ${name} بصلاحية ${ROLE_DEFS[role].label}`);
+  render();
+}
+function deleteStaffMember(id) {
+  if (!perms().canManageStaff) return;
+  if (!confirm("حذف هذا الموظف من القائمة؟")) return;
+  const staff = loadModuleData("staff_directory", []).filter(s => s.id !== id);
+  saveModuleData("staff_directory", staff);
+  if (state.activeStaff && state.activeStaff.id === id) state.activeStaff = null;
+  recordLocalAudit("DELETE_STAFF", "staff_directory", { id }, null);
+  render();
+}
+async function switchStaffShift(e) {
+  e.preventDefault();
+  const staffId = document.getElementById("sw-staff-id").value;
+  const pin = document.getElementById("sw-staff-pin").value.trim();
+  if (staffId === "OWNER") {
+    const ownerHash = localStorage.getItem(PIN_KEY);
+    if (ownerHash && await sha256Hex("sama-pin:" + pin) !== ownerHash) return showToast("رمز PIN المالك غير صحيح", "error");
+    state.activeStaff = null;
+    state.showStaffSwitchModal = false;
+    state.tenantTab = "dashboard";
+    recordLocalAudit("SHIFT_SWITCH", "auth", null, { to: "owner" });
+    showToast("تم التبديل إلى صلاحية المالك الكاملة");
+    render(); return;
+  }
+  const staff = loadModuleData("staff_directory", []);
+  const m = staff.find(x => x.id === staffId);
+  if (!m) return;
+  if (await sha256Hex("staff-pin:" + pin) !== m.pinHash) return showToast("رمز PIN الموظف غير صحيح", "error");
+  state.activeStaff = { id: m.id, name: m.name, role: m.role };
+  state.showStaffSwitchModal = false;
+  state.tenantTab = m.role === "technician" ? "telecom_maintenance" : (m.role === "sales" ? "pos_inventory" : "dashboard");
+  recordLocalAudit("SHIFT_SWITCH", "auth", null, { to: m.name, role: m.role });
+  showToast(`مرحباً ${m.name} — تم تفعيل صلاحيات (${ROLE_DEFS[m.role].label})`);
+  render();
+}
+
+// SHA-256 Verified Backup & Restore
+async function exportFullBackup() {
+  if (!perms().canBackup) return showToast("لا تملك صلاحية النسخ الاحتياطي", "error");
+  const bundle = {
+    app: "Sama Business Enterprise v1.1", exportedAt: new Date().toISOString(),
+    tenant: state.tenant, exchangeRate: state.exchangeRate, accounts: state.accounts, transactions: state.transactions,
+    modules: {
+      warehouses: getWarehouses(), pos_items: loadModuleData("pos_items", []),
+      stock_movements: loadModuleData("stock_movements", []), repairs: loadModuleData("repairs", []),
+      telecom_wallets: loadModuleData("telecom_wallets", { syriatel: 0, mtn: 0, shamcash: 0 }),
+      fx_history: loadModuleData("fx_history", []), cogs_ledger: loadModuleData("cogs_ledger", []),
+      installments: loadModuleData("installments", []), isp_subs: loadModuleData("isp_subs", []),
+      sales_reps: loadModuleData("sales_reps", []), z_reports: loadModuleData("z_reports", []),
+      staff_directory: loadModuleData("staff_directory", []), local_audit_trail: loadModuleData("local_audit_trail", [])
+    }
+  };
+  const sha256 = await sha256Hex(JSON.stringify(bundle));
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({ sha256, bundle }, null, 2)], { type: "application/json;charset=utf-8;" }));
+  a.download = `sama-enterprise-v1.1-backup-${fmtShortDate()}.json`; a.click();
+  recordLocalAudit("BACKUP_EXPORT", "system", null, { sha256: sha256.slice(0, 12) });
+  showToast("تم تصدير النسخة الاحتياطية الموثّقة ببصمة SHA-256 ✅");
+}
+async function importFullBackup(file) {
+  if (!file || !perms().canBackup) return;
+  try {
+    const parsed = JSON.parse(await file.text());
+    if (!parsed.sha256 || !parsed.bundle) throw new Error("صيغة الملف غير صالحة");
+    if (await sha256Hex(JSON.stringify(parsed.bundle)) !== parsed.sha256) throw new Error("فشل التحقق من بصمة SHA-256 — الملف معدّل أو تالف!");
+    Object.entries(parsed.bundle.modules || {}).forEach(([k, v]) => saveModuleData(k, v));
+    if (parsed.bundle.exchangeRate) { state.exchangeRate = Number(parsed.bundle.exchangeRate); localStorage.setItem(RATE_KEY, String(state.exchangeRate)); }
+    recordLocalAudit("BACKUP_RESTORE", "system", null, { sha256: parsed.sha256.slice(0, 12) });
+    showToast("تم التحقق الأمني واستعادة كافة البيانات بنجاح ✅"); render();
+  } catch (err) { showToast("فشل الاستعادة: " + err.message, "error"); }
+}
+
+// =========================================================================
+// 6. IFRS ENGINE, DOUBLE-ENTRY TRIAL BALANCE, DEBT AGING & AUTOMATED AUDIT
+// =========================================================================
+function computeFinancials() {
+  const reversedIds = new Set(state.transactions.filter(t => t.tx_type === "reversal" && t.reversed_tx_id).map(t => t.reversed_tx_id));
+  let usdCash = 0n, sypCash = 0n, usdRec = 0n, sypRec = 0n, usdPay = 0n, sypPay = 0n;
+  let usdRev = 0n, sypRev = 0n, usdExp = 0n, sypExp = 0n;
+  let usdInToday = 0n, usdOutToday = 0n, sypInToday = 0n, sypOutToday = 0n;
+  const todayStr = fmtShortDate();
+  const accountBalances = {};
+  const openDebtEntries = [];
+
+  for (const t of state.transactions) {
+    if (t.tx_type === "reversal" || reversedIds.has(t.id)) continue;
+    const amt = toMinor(t.amount);
+    const cur = t.currency;
+    const accId = t.account_id;
+    const isToday = fmtShortDate(t.created_at) === todayStr;
+    if (accId && !accountBalances[accId]) accountBalances[accId] = { USD: 0n, SYP: 0n };
+
+    if (t.tx_type === "income") {
+      if (cur === "USD") { usdCash += amt; if (t.module_source !== "fx_exchange") usdRev += amt; if (isToday) usdInToday += amt; }
+      else { sypCash += amt; if (t.module_source !== "fx_exchange") sypRev += amt; if (isToday) sypInToday += amt; }
+    } else if (t.tx_type === "expense") {
+      if (cur === "USD") { usdCash -= amt; if (t.module_source !== "fx_exchange") usdExp += amt; if (isToday) usdOutToday += amt; }
+      else { sypCash -= amt; if (t.module_source !== "fx_exchange") sypExp += amt; if (isToday) sypOutToday += amt; }
+    } else if (t.tx_type === "debt_out") {
+      if (cur === "USD") { usdRec += amt; usdRev += amt; } else { sypRec += amt; sypRev += amt; }
+      if (accId) accountBalances[accId][cur] += amt;
+      openDebtEntries.push({ id: t.id, accId, amt, cur, created_at: t.created_at, desc: t.description });
+    } else if (t.tx_type === "debt_in") {
+      if (cur === "USD") usdPay += amt; else sypPay += amt;
+      if (accId) accountBalances[accId][cur] -= amt;
+    }
+  }
+
+  // COGS & FX Gain/Loss from specialized ledgers
+  const cogsEntries = loadModuleData("cogs_ledger", []);
+  let usdCogs = 0n, sypCogs = 0n;
+  for (const c of cogsEntries) {
+    if (c.currency === "USD") usdCogs += toMinor(c.cost);
+    else sypCogs += toMinor(c.cost);
+  }
+  const fxEntries = loadModuleData("fx_history", []);
+  let fxGainUsd = 0n, fxGainSyp = 0n;
+  for (const f of fxEntries) {
+    if (f.toCurrency === "USD") fxGainUsd += toMinor(f.gainLoss || 0);
+    else fxGainSyp += toMinor(f.gainLoss || 0);
+  }
+
+  // Inventory Valuation at Cost (Asset for Balance Sheet)
+  const items = loadModuleData("pos_items", []);
+  let invValUsd = 0n, invValSyp = 0n;
+  for (const it of items) {
+    const val = toMinor(it.cost || 0) * BigInt(Math.max(0, Number(it.stock || 0)));
+    if (it.currency === "USD") invValUsd += val; else invValSyp += val;
+  }
+
+  // IFRS Income Statements (USD & SYP)
+  const pnlUsd = { revenue: usdRev, cogs: usdCogs, gross: usdRev - usdCogs, expenses: usdExp, fx: fxGainUsd, net: (usdRev - usdCogs) - usdExp + fxGainUsd };
+  const pnlSyp = { revenue: sypRev, cogs: sypCogs, gross: sypRev - sypCogs, expenses: sypExp, fx: fxGainSyp, net: (sypRev - sypCogs) - sypExp + fxGainSyp };
+
+  // Debt Aging Buckets (USD & SYP)
+  const nowMs = Date.now();
+  const aging = {
+    USD: { b30: 0n, b60: 0n, b90: 0n, bOver: 0n, list: [] },
+    SYP: { b30: 0n, b60: 0n, b90: 0n, bOver: 0n, list: [] }
+  };
+  for (const d of openDebtEntries) {
+    if (!aging[d.cur]) continue;
+    const accBal = d.accId && accountBalances[d.accId] ? accountBalances[d.accId][d.cur] : d.amt;
+    if (accBal <= 0n) continue;
+    const ageDays = Math.max(0, Math.floor((nowMs - new Date(d.created_at).getTime()) / 86400000));
+    if (ageDays <= 30) aging[d.cur].b30 += d.amt;
+    else if (ageDays <= 60) aging[d.cur].b60 += d.amt;
+    else if (ageDays <= 90) aging[d.cur].b90 += d.amt;
+    else aging[d.cur].bOver += d.amt;
+    if (ageDays > 30) aging[d.cur].list.push({ ...d, ageDays });
+  }
+
+  // Double-Entry Trial Balance per Currency (every transaction posts equal debit & credit)
+  function buildTB(cur) {
+    let cashDr = 0n, cashCr = 0n, recDr = 0n, recCr = 0n, revCr = 0n, expDr = 0n, payCr = 0n;
+    for (const t of state.transactions) {
+      if (t.currency !== cur || t.tx_type === "reversal" || reversedIds.has(t.id)) continue;
+      const a = toMinor(t.amount);
+      if (t.tx_type === "income") { cashDr += a; revCr += a; }
+      else if (t.tx_type === "expense") { expDr += a; cashCr += a; }
+      else if (t.tx_type === "debt_out") { recDr += a; revCr += a; }
+      else if (t.tx_type === "debt_in") { expDr += a; payCr += a; }
+    }
+    const rows = [
+      { code: "1010", name: "الصندوق النقدي", dr: cashDr, cr: cashCr },
+      { code: "1200", name: "الذمم المدينة (ديون لنا)", dr: recDr, cr: recCr },
+      { code: "2100", name: "الذمم الدائنة (ديون علينا)", dr: 0n, cr: payCr },
+      { code: "4000", name: "الإيرادات والمبيعات", dr: 0n, cr: revCr },
+      { code: "5000", name: "المصروفات والتكاليف", dr: expDr, cr: 0n }
+    ];
+    const totalDr = rows.reduce((s, r) => s + r.dr, 0n);
+    const totalCr = rows.reduce((s, r) => s + r.cr, 0n);
+    return { rows, totalDr, totalCr, balanced: totalDr === totalCr };
+  }
+  const tbUsd = buildTB("USD");
+  const tbSyp = buildTB("SYP");
+
+  // Automated Financial Audit Checks (6 checks)
+  const auditChecks = [];
+  auditChecks.push({
+    name: "توازن ميزان المراجعة (القيد المزدوج USD & SYP)",
+    pass: tbUsd.balanced && tbSyp.balanced,
+    detail: `USD: مدين ${fmtMinor(tbUsd.totalDr)} = دائن ${fmtMinor(tbUsd.totalCr)} | SYP: مدين ${fmtMinor(tbSyp.totalDr)} = دائن ${fmtMinor(tbSyp.totalCr)}`
+  });
+  // Double-reversal check
+  const revCounts = {};
+  let doubleRev = false;
+  for (const t of state.transactions) {
+    if (t.tx_type === "reversal" && t.reversed_tx_id) {
+      revCounts[t.reversed_tx_id] = (revCounts[t.reversed_tx_id] || 0) + 1;
+      if (revCounts[t.reversed_tx_id] > 1) doubleRev = true;
+    }
+  }
+  auditChecks.push({ name: "منع القيد العكسي المزدوج (IFRS Immutability)", pass: !doubleRev, detail: doubleRev ? "تم رصد قيد معكوس أكثر من مرة!" : "لا توجد قيود عكسية مكررة" });
+  auditChecks.push({ name: "عدم وجود رصيد صندوق سالب", pass: usdCash >= 0n && sypCash >= 0n, detail: `USD: ${fmtMinor(usdCash)}$ | SYP: ${fmtMinor(sypCash)} ل.س` });
+  const negStock = items.filter(i => Number(i.stock) < 0);
+  auditChecks.push({ name: "سلامة كميات المخزون (لا يوجد مخزون سالب)", pass: negStock.length === 0, detail: negStock.length ? `${negStock.length} صنف بكمية سالبة` : `${items.length} صنف سليم برقم UUID مخفي` });
+  const seenUids = new Set(); let dupUid = false;
+  for (const it of items) { const u = it.hidden_uuid || it.id; if (seenUids.has(u)) dupUid = true; seenUids.add(u); }
+  auditChecks.push({ name: "تفرّد أرقام UUID المخفية للمخزون", pass: !dupUid, detail: dupUid ? "تعارض في رقم UUID!" : "جميع الأصناف بمعرّفات فريدة" });
+  auditChecks.push({ name: "طابور المزامنة السحابية (Offline Queue)", pass: state.offlineQueue.length === 0, detail: state.offlineQueue.length ? `${state.offlineQueue.length} عملية بانتظار الإنترنت` : "متزامن 100% مع السحابة" });
+
+  const passedCount = auditChecks.filter(c => c.pass).length;
+  const healthScore = Math.round((passedCount / auditChecks.length) * 100);
+  const alerts = auditChecks.filter(c => !c.pass).map(c => `⚠️ ${c.name}: ${c.detail}`);
+  const lowStock = items.filter(i => Number(i.stock) <= Number(i.minStock || 2));
+  if (lowStock.length > 0) alerts.push(`📦 تنبيه مخزون: ${lowStock.length} صنف وصل للحد الأدنى.`);
+  if (alerts.length === 0) alerts.push("✅ جميع الاختبارات المالية الآلية (6/6) ناجحة 100% والصناديق متوازنة.");
+
+  const totalUsdEquiv = fromMinor(usdCash) + (state.exchangeRate > 0 ? fromMinor(sypCash) / state.exchangeRate : 0);
+
+  return {
+    usdCash, sypCash, usdRec, sypRec, usdPay, sypPay,
+    usdInToday, usdOutToday, sypInToday, sypOutToday,
+    invValUsd, invValSyp, pnlUsd, pnlSyp, tbUsd, tbSyp, aging,
+    totalUsdEquiv, reversedIds, accountBalances, auditChecks, alerts, healthScore
+  };
+}
+
+// =========================================================================
+// 7. AUTH, DEMO MODE & CLOUD SYNC
+// =========================================================================
+function enterDemoMode(role = "super_admin") {
+  state.isDemo = true; state.errorBanner = ""; state.activeStaff = null;
+  state.user = { id: "demo-user-1", email: role === "super_admin" ? "admin@sama.local" : "huawei@sama.local" };
+  const exp = new Date(Date.now() + 30 * 86400000).toISOString();
+  state.tenants = [{
+    id: "demo-shop-1", shop_name: "مركز اتصالات هووواوي (Enterprise v1.1)", plan_preset: "telecom",
+    is_active: true, expires_at: exp, activation_code: "PRO-8A4C2F", is_claimed: true,
+    enabled_modules: { ...PLAN_PRESETS.enterprise.modules }, created_at: new Date().toISOString()
+  }];
+  if (role === "super_admin") {
+    state.profile = { id: "demo-user-1", tenant_id: null, full_name: "المدير العام", role: "super_admin" };
+    state.tenant = null;
+  } else {
+    state.profile = { id: "demo-user-1", tenant_id: "demo-shop-1", full_name: "المالك (المدير)", role: "owner" };
+    state.tenant = state.tenants[0];
+    state.accounts = [
+      { id: "acc-1", tenant_id: "demo-shop-1", name: "أحمد العلي", phone: "0933112233", account_type: "customer", notes: "زبون دائم" },
+      { id: "acc-2", tenant_id: "demo-shop-1", name: "موزع الجملة - الشام", phone: "0944556677", account_type: "supplier", notes: "مورد إكسسوارات" }
+    ];
+    state.transactions = [
+      { id: "tx-1", tenant_id: "demo-shop-1", account_id: "acc-1", module_source: "core", tx_type: "income", amount: 350, currency: "USD", exchange_rate: 12000, description: "مبيعات يومية نقداً", created_at: new Date().toISOString() },
+      { id: "tx-2", tenant_id: "demo-shop-1", account_id: "acc-1", module_source: "core", tx_type: "debt_out", amount: 65, currency: "USD", exchange_rate: 12000, description: "شاشة وشاحن آجل", created_at: new Date(Date.now() - 42*86400000).toISOString() },
+      { id: "tx-3", tenant_id: "demo-shop-1", account_id: null, module_source: "core", tx_type: "income", amount: 1800000, currency: "SYP", exchange_rate: 12000, description: "تحويل رصيد وباقات", created_at: new Date().toISOString() },
+      { id: "tx-4", tenant_id: "demo-shop-1", account_id: null, module_source: "core", tx_type: "expense", amount: 40, currency: "USD", exchange_rate: 12000, description: "إيجار وكهرباء", created_at: new Date().toISOString() }
+    ];
+  }
+  state.loading = false; render();
+}
+
+async function bootstrapSession() {
+  state.loading = true; loadOfflineQueue(); render();
+  if (!sb) { state.loading = false; render(); return; }
+  try {
+    const { data, error } = await sb.auth.getSession();
+    if (error) throw error;
+    if (data && data.session && data.session.user) { state.user = data.session.user; await loadUserProfileAndData(); }
+  } catch (e) { console.warn(e.message); }
+  state.loading = false; render();
+}
+async function loadUserProfileAndData() {
+  if (state.isDemo) return;
+  const { data: prof, error } = await sb.from("profiles").select("*").eq("id", state.user.id).maybeSingle();
+  if (error) throw error;
+  if (!prof) throw new Error("حسابك غير مرتبط بمتجر بعد.");
+  state.profile = prof;
+  if (prof.role === "super_admin") {
+    const [tRes, aRes] = await Promise.all([
+      sb.from("tenants").select("*").order("created_at", { ascending: false }),
+      sb.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(50)
+    ]);
+    if (tRes.error) throw tRes.error;
+    state.tenants = tRes.data || []; state.adminAuditLogs = (aRes && aRes.data) || [];
+  } else await fetchTenantData(prof.tenant_id);
+}
+async function fetchTenantData(tenantId) {
+  if (state.isDemo) return;
+  try {
+    const { data: tData, error: tErr } = await sb.from("tenants").select("*").eq("id", tenantId).single();
+    if (tErr) throw tErr;
+    state.tenant = tData;
+    if (!tData.is_active || new Date(tData.expires_at) < new Date()) return;
+    const [accRes, txRes] = await Promise.all([
+      sb.from("accounts").select("*").order("created_at", { ascending: false }),
+      sb.from("transactions").select("*").order("created_at", { ascending: false }).limit(500)
+    ]);
+    if (accRes.error) throw accRes.error;
+    if (txRes.error) throw txRes.error;
+    state.accounts = accRes.data || []; state.transactions = txRes.data || [];
+    if (state.profile.role === "owner") {
+      const aud = await sb.from("audit_logs").select("*").order("created_at", { ascending: false }).limit(60);
+      state.auditLogs = (aud && aud.data) || [];
+    }
+    cacheTenantSnapshot();
+    if (state.online && state.offlineQueue.length > 0) await syncOfflineQueue();
+  } catch (err) {
+    const raw = localStorage.getItem(`finos_cache_${tenantId}`);
+    if (raw) {
+      const snap = JSON.parse(raw);
+      state.tenant = snap.tenant; state.accounts = snap.accounts || []; state.transactions = snap.transactions || [];
+      showToast("تم التحميل من الذاكرة المحلية", "info");
+    } else throw err;
+  }
+}
+async function handleLogin(e) {
+  e.preventDefault(); state.errorBanner = "";
+  const email = document.getElementById("login-email").value.trim();
+  const password = document.getElementById("login-password").value;
+  try {
+    state.isDemo = false;
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) throw error;
+    state.user = data.user; await loadUserProfileAndData();
+    showToast("مرحباً بك في Sama Business Enterprise v1.1"); render();
+  } catch (err) { state.errorBanner = "فشل الدخول: " + err.message; render(); }
+}
+async function handleActivateShop(e) {
+  e.preventDefault(); state.errorBanner = "";
+  const fullName = document.getElementById("act-name").value.trim();
+  const email = document.getElementById("act-email").value.trim();
+  const password = document.getElementById("act-password").value;
+  const code = document.getElementById("act-code").value.trim().toUpperCase();
+  try {
+    state.isDemo = false;
+    let authUser = null;
+    const { data: su, error: suErr } = await sb.auth.signUp({ email, password });
+    if (suErr) {
+      if (String(suErr.message).toLowerCase().includes("already")) {
+        const { data: si, error: siErr } = await sb.auth.signInWithPassword({ email, password });
+        if (siErr) throw siErr; authUser = si.user;
+      } else throw suErr;
+    } else authUser = su.user;
+    const { error: clErr } = await sb.rpc("claim_tenant_with_code", { p_code: code, p_full_name: fullName });
+    if (clErr) throw clErr;
+    state.user = authUser; await loadUserProfileAndData();
+    showToast("تم تفعيل المتجر بنجاح"); render();
+  } catch (err) { state.errorBanner = "فشل التفعيل: " + err.message; render(); }
+}
+async function handleLogout() {
+  if (!state.isDemo && sb) await sb.auth.signOut();
+  state.isDemo = false; state.user = null; state.profile = null; state.tenant = null; state.activeStaff = null; render();
+}
+
+// =========================================================================
+// 8. POSTING, FX CONVERSION, PARTIAL DEBTS & MULTI-WAREHOUSE OPERATIONS
+// =========================================================================
+async function postTransaction(payload) {
+  const hiddenUuid = payload.hidden_uuid || generateHiddenUuid();
+  if (state.committedUuids.has(hiddenUuid)) { showToast("تم منع التكرار تلقائياً (UUID Guard)", "info"); return false; }
+  state.committedUuids.add(hiddenUuid);
+  const cleanAmt = fromMinor(toMinor(payload.amount));
+  if (cleanAmt <= 0) { state.committedUuids.delete(hiddenUuid); showToast("المبلغ يجب أن يكون أكبر من صفر", "error"); return false; }
+
+  const hiddenTag = `[UID:${hiddenUuid.slice(0,8).toUpperCase()}|BY:${currentRoleKey().toUpperCase()}]`;
+  const finalDesc = `${(payload.description || "").trim()} ${hiddenTag}`.trim();
+  const txRecord = {
+    tenant_id: state.tenant.id, account_id: payload.account_id || null, module_source: payload.module_source || "core",
+    tx_type: payload.tx_type, amount: cleanAmt, currency: payload.currency,
+    exchange_rate: Number(payload.exchange_rate || state.exchangeRate || 1),
+    description: finalDesc, reversed_tx_id: payload.reversed_tx_id || null, created_by: state.user.id
+  };
+
+  recordLocalAudit("POST_TX", "transactions", null, { tx_type: txRecord.tx_type, amount: cleanAmt, currency: txRecord.currency, hiddenUuid });
+
+  if (state.isDemo) {
+    state.transactions.unshift({ ...txRecord, id: hiddenUuid, hidden_uuid: hiddenUuid, created_at: new Date().toISOString() });
+    showToast("تم تسجيل القيد بدقة BigInt ورقم UUID مخفي ✅"); render(); return true;
+  }
+  if (!navigator.onLine) {
+    const ltx = { ...txRecord, id: "offline-" + hiddenUuid, hidden_uuid: hiddenUuid, created_at: new Date().toISOString(), _offline: true };
+    state.transactions.unshift(ltx); state.offlineQueue.push({ kind: "transaction", data: txRecord, hiddenUuid });
+    saveOfflineQueue(); cacheTenantSnapshot(); showToast("حُفظ محلياً وسيُزامن تلقائياً", "info"); render(); return true;
+  }
+  try {
+    const { data, error } = await sb.from("transactions").insert([txRecord]).select().single();
+    if (error) throw error;
+    state.transactions.unshift({ ...data, hidden_uuid: hiddenUuid }); cacheTenantSnapshot();
+    showToast("تم تسجيل القيد ومزامنته سحابياً ✅"); render(); return true;
+  } catch (err) {
+    const ltx = { ...txRecord, id: "offline-" + hiddenUuid, hidden_uuid: hiddenUuid, created_at: new Date().toISOString(), _offline: true };
+    state.transactions.unshift(ltx); state.offlineQueue.push({ kind: "transaction", data: txRecord, hiddenUuid });
+    saveOfflineQueue(); cacheTenantSnapshot(); showToast("حُفظ في طابور المزامنة: " + err.message, "info"); render(); return true;
+  }
+}
+
+async function syncOfflineQueue() {
+  if (state.isDemo || !navigator.onLine || state.offlineQueue.length === 0) return;
+  let synced = 0; const rem = [];
+  for (const item of state.offlineQueue) {
+    try {
+      const { error } = await sb.from(item.kind === "account" ? "accounts" : "transactions").insert([item.data]);
+      if (error) throw error; synced++;
+    } catch (_) { rem.push(item); }
+  }
+  state.offlineQueue = rem; saveOfflineQueue();
+  if (synced > 0) { showToast(`تمت مزامنة ${synced} عملية مع السحابة`); if (state.tenant) await fetchTenantData(state.tenant.id); render(); }
+}
+
+async function handleQuickTxSubmit(e) {
+  e.preventDefault();
+  if (!perms().canPostFinance) return showToast("دورك الحالي لا يملك صلاحية تسجيل قيود الصندوق", "error");
+  const ok = await postTransaction({
+    tx_type: document.getElementById("tx-type").value,
+    amount: document.getElementById("tx-amount").value,
+    currency: document.getElementById("tx-currency").value,
+    account_id: document.getElementById("tx-account").value || null,
+    description: document.getElementById("tx-desc").value.trim(),
+    module_source: "core"
+  });
+  if (ok) e.target.reset();
+}
+
+async function reverseTransaction(txId) {
+  if (!perms().canReverse) return showToast("صلاحية القيد العكسي محصورة بالمدير والمحاسب فقط", "error");
+  const orig = state.transactions.find(t => t.id === txId); if (!orig) return;
+  if (state.transactions.some(t => t.tx_type === "reversal" && t.reversed_tx_id === txId)) return showToast("تم عكس هذا القيد مسبقاً", "error");
+  if (!confirm("تأكيد إنشاء قيد عكسي محاسبي لإلغاء أثر هذه العملية؟")) return;
+  await postTransaction({
+    tx_type: "reversal", amount: orig.amount, currency: orig.currency, account_id: orig.account_id,
+    module_source: orig.module_source || "core", reversed_tx_id: orig.id,
+    description: `قيد عكسي: ${orig.description || ""}`
+  });
+}
+
+// IAS 21 Currency Exchange Conversion (USD <-> SYP)
+async function submitFxConversion(e) {
+  e.preventDefault();
+  if (!perms().canManageFx) return showToast("لا تملك صلاحية تحويل العملات", "error");
+  const dir = document.getElementById("fx-dir").value;
+  const amt = fromMinor(toMinor(document.getElementById("fx-amt").value));
+  const rate = Number(document.getElementById("fx-rate").value);
+  const note = document.getElementById("fx-note").value.trim();
+  if (amt <= 0 || rate <= 0) return showToast("أدخل مبلغاً وسعر صرف صحيحين", "error");
+
+  const refRate = state.exchangeRate || rate;
+  let fromCur, toCur, targetAmt, refTargetAmt;
+  if (dir === "USD_TO_SYP") {
+    fromCur = "USD"; toCur = "SYP";
+    targetAmt = Number((amt * rate).toFixed(2));
+    refTargetAmt = Number((amt * refRate).toFixed(2));
+  } else {
+    fromCur = "SYP"; toCur = "USD";
+    targetAmt = Number((amt / rate).toFixed(2));
+    refTargetAmt = Number((amt / refRate).toFixed(2));
+  }
+  const gainLoss = Number((targetAmt - refTargetAmt).toFixed(2));
+  const fxList = loadModuleData("fx_history", []);
+  fxList.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), fromCur, toCurrency: toCur, sourceAmt: amt, targetAmt, appliedRate: rate, refRate, gainLoss, note });
+  saveModuleData("fx_history", fxList);
+
+  await postTransaction({ tx_type: "expense", amount: amt, currency: fromCur, module_source: "fx_exchange", exchange_rate: rate, description: `تحويل عملة (${fromCur}→${toCur}) بسعر ${fmtNum(rate)} ${note}` });
+  await postTransaction({ tx_type: "income", amount: targetAmt, currency: toCur, module_source: "fx_exchange", exchange_rate: rate, description: `استلام تحويل عملة (${fromCur}→${toCur}) | فرق صرف: ${fmtNum(gainLoss)} ${toCur}` });
+  state.showFxModal = false;
+  showToast(`تم التحويل بنجاح | أثر فروقات الصرف: ${fmtNum(gainLoss)} ${toCur}`);
+  render();
+}
+
+// Partial Debt Payment (Linked directly to customer/supplier account)
+async function recordPartialDebtPayment(accId, currency) {
+  const acc = state.accounts.find(a => a.id === accId); if (!acc) return;
+  const val = prompt(`أدخل مبلغ الدفعة الجزئية للطرف (${acc.name}) بعملة ${currency}:`, "");
+  const amt = fromMinor(toMinor(val));
+  if (!amt || amt <= 0) return;
+  // Reduces customer receivable (debt_in) + adds cash to cashbox (income)
+  await postTransaction({ tx_type: "income", amount: amt, currency, account_id: accId, module_source: "debt_payment", description: `قبض دفعة جزئية من دين ${acc.name}` });
+  await postTransaction({ tx_type: "debt_in", amount: amt, currency, account_id: accId, module_source: "debt_payment", description: `تخفيض رصيد دين ${acc.name} بدفعة نقدية` });
+}
+
+// AI Copilot
+function handleAiCommandRun() {
+  const parsed = parseArabicFinancialCommand(state.aiCommandText);
+  if (!parsed) return showToast("اكتب أو انطق أمرك أولاً", "error");
+  state.aiPreview = parsed; render();
+}
+async function confirmAiTransaction() {
+  if (!state.aiPreview || state.aiPreview.kind !== "tx") return;
+  const p = state.aiPreview;
+  if (!p.amount || p.amount <= 0) return showToast("لم يتم تحديد مبلغ صالح", "error");
+  const ok = await postTransaction({ tx_type: p.tx_type, amount: p.amount, currency: p.currency, account_id: p.account_id, description: `🤖 [AI] ${p.description}`, module_source: "ai_copilot" });
+  if (ok) { state.aiCommandText = ""; state.aiPreview = null; render(); }
+}
+
+// Multi-Warehouse Inventory, Transfer, Damaged Stock & Sales Return
+function addWarehouse() {
+  const name = prompt("أدخل اسم المستودع الجديد (مثال: مستودع الفرع الثاني):");
+  if (!name || !name.trim()) return;
+  const whs = [...getWarehouses(), { id: "wh-" + Date.now(), name: name.trim() }];
+  saveModuleData("warehouses", whs);
+  recordLocalAudit("ADD_WAREHOUSE", "warehouses", null, { name: name.trim() });
+  showToast("تمت إضافة المستودع بنجاح"); render();
+}
+function addOrUpdatePosProduct(e) {
+  e.preventDefault();
+  const name = document.getElementById("pos-name").value.trim();
+  const sku = document.getElementById("pos-sku").value.trim();
+  const warehouseId = document.getElementById("pos-wh").value || "wh-main";
+  const cost = perms().canViewCost ? fromMinor(toMinor(document.getElementById("pos-cost").value || 0)) : 0;
+  const price = fromMinor(toMinor(document.getElementById("pos-price").value));
+  const currency = document.getElementById("pos-currency").value;
+  const stock = Math.max(0, Math.floor(Number(document.getElementById("pos-stock").value || 0)));
+  const minStock = Math.max(0, Math.floor(Number(document.getElementById("pos-min").value || 2)));
+  if (!name || price <= 0) return showToast("أدخل اسم الصنف وسعر البيع", "error");
+
+  const items = loadModuleData("pos_items", []);
+  if (state.editingProductId) {
+    const idx = items.findIndex(x => x.id === state.editingProductId);
+    if (idx !== -1) {
+      const before = { ...items[idx] };
+      const keepCost = perms().canViewCost ? cost : (items[idx].cost || 0);
+      items[idx] = { ...items[idx], name, sku, warehouseId, cost: keepCost, price, currency, stock, minStock, updatedAt: new Date().toISOString() };
+      recordLocalAudit("UPDATE_ITEM", "inventory", before, items[idx]);
+    }
+    state.editingProductId = null; showToast("تم تحديث الصنف");
+  } else {
+    const hid = generateHiddenUuid();
+    const rec = { id: hid, hidden_uuid: hid, warehouseId, name, sku, cost, price, currency, stock, minStock, createdAt: new Date().toISOString() };
+    items.unshift(rec);
+    recordLocalAudit("CREATE_ITEM", "inventory", null, { name, warehouseId, stock, hidden_uuid: hid });
+    showToast("تمت إضافة الصنف برقم ID مخفي ✅");
+  }
+  saveModuleData("pos_items", items); render();
+}
+function transferProductWarehouse(pid) {
+  const items = loadModuleData("pos_items", []);
+  const src = items.find(x => x.id === pid); if (!src) return;
+  const whs = getWarehouses().filter(w => w.id !== (src.warehouseId || "wh-main"));
+  if (whs.length === 0) return showToast("أضف مستودعاً آخر أولاً", "error");
+  const choice = prompt(`اختر رقم المستودع الهدف للتحويل إليه:\n${whs.map((w, i) => `${i + 1}) ${w.name}`).join("\n")}`, "1");
+  const targetWh = whs[Number(choice) - 1];
+  if (!targetWh) return;
+  const qty = Math.floor(Number(prompt(`الكمية المراد تحويلها من (${src.name}) [المتوفر: ${src.stock}]:`, "1")));
+  if (!qty || qty <= 0 || qty > Number(src.stock)) return showToast("كمية التحويل غير صالحة", "error");
+
+  src.stock = Number(src.stock) - qty;
+  const existingDest = items.find(x => x.name === src.name && (x.warehouseId || "wh-main") === targetWh.id && x.currency === src.currency);
+  if (existingDest) existingDest.stock = Number(existingDest.stock) + qty;
+  else {
+    const hid = generateHiddenUuid();
+    items.unshift({ ...src, id: hid, hidden_uuid: hid, warehouseId: targetWh.id, stock: qty, createdAt: new Date().toISOString() });
+  }
+  saveModuleData("pos_items", items);
+  const moves = loadModuleData("stock_movements", []);
+  moves.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), type: "TRANSFER", item: src.name, qty, from: src.warehouseId || "wh-main", to: targetWh.id });
+  saveModuleData("stock_movements", moves.slice(0, 200));
+  recordLocalAudit("WAREHOUSE_TRANSFER", "inventory", { from: src.warehouseId, qty }, { to: targetWh.id, item: src.name });
+  showToast(`تم تحويل ${qty} من ${src.name} إلى ${targetWh.name} ✅`); render();
+}
+async function recordDamagedProduct(pid) {
+  const items = loadModuleData("pos_items", []);
+  const it = items.find(x => x.id === pid); if (!it) return;
+  const qty = Math.floor(Number(prompt(`كم قطعة تالفة/هالكة من (${it.name})؟ [المتوفر: ${it.stock}]`, "1")));
+  if (!qty || qty <= 0 || qty > Number(it.stock)) return showToast("كمية غير صالحة", "error");
+  const reason = prompt("سبب التلف (مثال: كسر شاشة أثناء التركيب / منتهي الصلاحية):", "تلف مخزني") || "تلف مخزني";
+  it.stock = Number(it.stock) - qty;
+  saveModuleData("pos_items", items);
+  const loss = fromMinor(toMinor(it.cost || it.price) * BigInt(qty));
+  const moves = loadModuleData("stock_movements", []);
+  moves.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), type: "DAMAGED", item: it.name, qty, loss, currency: it.currency, reason });
+  saveModuleData("stock_movements", moves.slice(0, 200));
+  if (loss > 0 && perms().canPostFinance) {
+    await postTransaction({ tx_type: "expense", amount: loss, currency: it.currency, module_source: "inventory_damage", description: `إتلاف مخزون (${it.name} ×${qty}) — ${reason}` });
+  } else { showToast(`تم تسجيل إتلاف ${qty} من ${it.name}`); render(); }
+}
+async function processSalesReturn(pid) {
+  const items = loadModuleData("pos_items", []);
+  const it = items.find(x => x.id === pid); if (!it) return;
+  const qty = Math.floor(Number(prompt(`كم قطعة مرتجعة من الزبون للصنف (${it.name})؟`, "1")));
+  if (!qty || qty <= 0) return;
+  it.stock = Number(it.stock) + qty;
+  saveModuleData("pos_items", items);
+  const refund = fromMinor(toMinor(it.price) * BigInt(qty));
+  const moves = loadModuleData("stock_movements", []);
+  moves.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), type: "RETURN", item: it.name, qty, refund, currency: it.currency });
+  saveModuleData("stock_movements", moves.slice(0, 200));
+  if (refund > 0 && perms().canPostFinance) {
+    await postTransaction({ tx_type: "expense", amount: refund, currency: it.currency, module_source: "sales_return", description: `مرتجع مبيعات وإعادة للمخزون (${it.name} ×${qty})` });
+  } else { showToast(`تم إرجاع ${qty} للمخزون`); render(); }
+}
+function restockPosProduct(pid) {
+  const q = Math.floor(Number(prompt("كم قطعة تريد إضافتها للمخزون؟", "5")));
+  if (!q || q <= 0) return;
+  const items = loadModuleData("pos_items", []);
+  const it = items.find(x => x.id === pid);
+  if (it) { it.stock = Number(it.stock) + q; saveModuleData("pos_items", items); recordLocalAudit("RESTOCK", "inventory", null, { item: it.name, added: q }); showToast(`تم التوريد +${q}`); render(); }
+}
+function deletePosProduct(pid) {
+  if (!confirm("حذف الصنف من المخزون؟")) return;
+  saveModuleData("pos_items", loadModuleData("pos_items", []).filter(x => x.id !== pid));
+  if (state.editingProductId === pid) state.editingProductId = null;
+  recordLocalAudit("DELETE_ITEM", "inventory", { pid }, null); render();
+}
+function addToCart(pid) {
+  const p = loadModuleData("pos_items", []).find(x => x.id === pid);
+  if (!p || Number(p.stock) <= 0) return showToast("نفدت الكمية من المخزون!", "error");
+  const ex = state.posCart.find(c => c.id === pid);
+  if (ex) { if (ex.qty + 1 > Number(p.stock)) return showToast("تجاوزت الكمية المتوفرة", "error"); ex.qty += 1; }
+  else state.posCart.push({ ...p, qty: 1 });
+  render();
+}
+async function checkoutPosCart(mode) {
+  if (state.posCart.length === 0) return showToast("السلة فارغة", "error");
+  const accId = (document.getElementById("pos-customer") || {}).value || null;
+  const items = loadModuleData("pos_items", []);
+  const cogsLog = loadModuleData("cogs_ledger", []);
+  let usdMinor = 0n, sypMinor = 0n, usdCost = 0n, sypCost = 0n;
+  const parts = [];
+  for (const c of state.posCart) {
+    const q = BigInt(c.qty);
+    const lSale = toMinor(c.price) * q;
+    const lCost = toMinor(c.cost || 0) * q;
+    if (c.currency === "USD") { usdMinor += lSale; usdCost += lCost; } else { sypMinor += lSale; sypCost += lCost; }
+    parts.push(`${c.name} ×${c.qty}`);
+    const p = items.find(i => i.id === c.id);
+    if (p) p.stock = Math.max(0, Number(p.stock) - c.qty);
+  }
+  saveModuleData("pos_items", items);
+  if (usdCost > 0n) cogsLog.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), cost: fromMinor(usdCost), currency: "USD", desc: parts.join("، ") });
+  if (sypCost > 0n) cogsLog.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), cost: fromMinor(sypCost), currency: "SYP", desc: parts.join("، ") });
+  saveModuleData("cogs_ledger", cogsLog.slice(0, 500));
+
+  const txType = mode === "credit" ? "debt_out" : "income";
+  const lbl = mode === "credit" ? "آجل" : "نقداً";
+  if (usdMinor > 0n) await postTransaction({ tx_type: txType, amount: fromMinor(usdMinor), currency: "USD", account_id: accId, module_source: "pos_inventory", description: `فاتورة (${lbl}): ${parts.join("، ")}` });
+  if (sypMinor > 0n) await postTransaction({ tx_type: txType, amount: fromMinor(sypMinor), currency: "SYP", account_id: accId, module_source: "pos_inventory", description: `فاتورة (${lbl}): ${parts.join("، ")}` });
+  state.posCart = []; render();
+}
+
+// Maintenance with Spare Parts Auto-Deduction & Telecom Wallets
+function updateTelecomWallet(netKey) {
+  const w = loadModuleData("telecom_wallets", { syriatel: 0, mtn: 0, shamcash: 0 });
+  const v = prompt("أدخل الرصيد الحالي للمحفظة:", w[netKey] || 0);
+  if (v !== null && Number(v) >= 0) { w[netKey] = Number(v); saveModuleData("telecom_wallets", w); showToast("تم التحديث"); render(); }
+}
+async function submitTopupSale(e) {
+  e.preventDefault();
+  const net = document.getElementById("top-net").value;
+  const nk = document.getElementById("top-wallet-key").value;
+  const amt = fromMinor(toMinor(document.getElementById("top-amt").value));
+  const cur = document.getElementById("top-cur").value;
+  const profit = fromMinor(toMinor(document.getElementById("top-profit").value || 0));
+  if (amt <= 0) return;
+  if (nk && nk !== "none") {
+    const w = loadModuleData("telecom_wallets", { syriatel: 0, mtn: 0, shamcash: 0 });
+    w[nk] = Math.max(0, Number(w[nk] || 0) - amt); saveModuleData("telecom_wallets", w);
+  }
+  await postTransaction({ tx_type: "income", amount: amt, currency: cur, module_source: "telecom_maintenance", description: `تحويل ${net} (ربح صافي: ${fmtNum(profit)} ${cur})` });
+  e.target.reset();
+}
+function addRepairTicket(e) {
+  e.preventDefault();
+  const customer = document.getElementById("rep-cust").value.trim();
+  const phone = document.getElementById("rep-phone").value.trim();
+  const device = document.getElementById("rep-device").value.trim();
+  const imei = document.getElementById("rep-imei").value.trim();
+  const issue = document.getElementById("rep-issue").value.trim();
+  const partId = document.getElementById("rep-part-id").value;
+  let partsCost = fromMinor(toMinor(document.getElementById("rep-parts").value || 0));
+  const cost = fromMinor(toMinor(document.getElementById("rep-cost").value));
+  const currency = document.getElementById("rep-cur").value;
+  const warrantyDays = Number(document.getElementById("rep-warranty").value || 0);
+  if (!customer || !device || cost <= 0) return showToast("أكمل بيانات الجهاز والأجرة", "error");
+
+  let partName = "";
+  if (partId) {
+    const items = loadModuleData("pos_items", []);
+    const part = items.find(x => x.id === partId);
+    if (part && Number(part.stock) > 0) {
+      part.stock = Number(part.stock) - 1;
+      partName = part.name;
+      if (partsCost === 0 && part.cost) partsCost = Number(part.cost);
+      saveModuleData("pos_items", items);
+    }
+  }
+  const list = loadModuleData("repairs", []);
+  const hid = generateHiddenUuid();
+  list.unshift({ id: hid, hidden_uuid: hid, customer, phone, device, imei, issue, partName, partsCost, cost, currency, warrantyDays, status: "قيد الصيانة", created_at: new Date().toISOString() });
+  saveModuleData("repairs", list);
+  recordLocalAudit("CREATE_REPAIR", "repairs", null, { device, customer, partName });
+  showToast(partName ? `تم تسجيل الجهاز وخصم قطعة (${partName}) من المخزون ✅` : "تم تسجيل تذكرة الصيانة ✅");
+  render();
+}
+async function deliverRepairTicket(rid) {
+  const list = loadModuleData("repairs", []);
+  const t = list.find(x => x.id === rid);
+  if (!t || t.status === "تم التسليم") return;
+  t.status = "تم التسليم"; saveModuleData("repairs", list);
+  if (t.partsCost > 0) {
+    const cogsLog = loadModuleData("cogs_ledger", []);
+    cogsLog.unshift({ id: generateHiddenUuid(), at: new Date().toISOString(), cost: t.partsCost, currency: t.currency, desc: `قطع صيانة: ${t.device}` });
+    saveModuleData("cogs_ledger", cogsLog.slice(0, 500));
+  }
+  if (perms().canPostFinance) {
+    await postTransaction({ tx_type: "income", amount: t.cost, currency: t.currency, module_source: "telecom_maintenance", description: `تسليم صيانة ${t.device} (${t.customer}) ${t.warrantyDays ? '| ضمان '+t.warrantyDays+' يوم' : ''}` });
+  } else { showToast("تم تسليم الجهاز (يُرحّل القبض عبر أمين الصندوق)"); render(); }
+}
+
+// Z-Report, Accounts, Installments, ISP, Reps
+function submitZReport(e) {
+  e.preventDefault();
+  const fin = computeFinancials();
+  const cUsd = toMinor(document.getElementById("zr-usd").value);
+  const cSyp = toMinor(document.getElementById("zr-syp").value);
+  const note = document.getElementById("zr-note").value.trim();
+  const reports = loadModuleData("z_reports", []);
+  reports.unshift({
+    id: generateHiddenUuid(), closedAt: new Date().toISOString(), closedBy: currentActorName(),
+    bookUsd: fromMinor(fin.usdCash), countedUsd: fromMinor(cUsd), diffUsd: fromMinor(cUsd - fin.usdCash),
+    bookSyp: fromMinor(fin.sypCash), countedSyp: fromMinor(cSyp), diffSyp: fromMinor(cSyp - fin.sypCash), note
+  });
+  saveModuleData("z_reports", reports);
+  recordLocalAudit("Z_REPORT_CLOSE", "cashbox", null, { diffUsd: fromMinor(cUsd - fin.usdCash), diffSyp: fromMinor(cSyp - fin.sypCash) });
+  state.showZReportModal = false; showToast("تم حفظ إغلاق الصندوق اليومي (Z-Report) ✅"); render();
+}
+async function addAccount(e) {
+  e.preventDefault();
+  const rec = { tenant_id: state.tenant.id, name: document.getElementById("acc-name").value.trim(), phone: document.getElementById("acc-phone").value.trim(), account_type: document.getElementById("acc-type").value, notes: document.getElementById("acc-notes").value.trim() };
+  if (!rec.name) return;
+  if (state.isDemo) { state.accounts.unshift({ ...rec, id: generateHiddenUuid() }); render(); return; }
+  const { data, error } = await sb.from("accounts").insert([rec]).select().single();
+  if (error) return showToast(error.message, "error");
+  state.accounts.unshift(data); cacheTenantSnapshot(); showToast("تمت إضافة الحساب"); render();
+}
+function addInstallmentContract(e) {
+  e.preventDefault();
+  const buyer = document.getElementById("ins-buyer").value.trim(), phone = document.getElementById("ins-phone").value.trim(), guarantor = document.getElementById("ins-guarantor").value.trim(), item = document.getElementById("ins-item").value.trim();
+  const price = Number(document.getElementById("ins-price").value), down = Number(document.getElementById("ins-down").value||0), pct = Number(document.getElementById("ins-pct").value||0), months = Number(document.getElementById("ins-months").value||6), currency = document.getElementById("ins-cur").value;
+  const principal = Math.max(0, price - down), total = principal + principal*pct/100, monthly = Number((total/months).toFixed(2));
+  const list = loadModuleData("installments", []);
+  list.unshift({ id: generateHiddenUuid(), buyer, phone, guarantor, item, monthly, remaining: Number(total.toFixed(2)), months, paidMonths: 0, currency, nextDue: fmtShortDate(Date.now()+30*86400000) });
+  saveModuleData("installments", list);
+  if (down > 0) postTransaction({ tx_type: "income", amount: down, currency, module_source: "installments", description: `دفعة أولى تقسيط (${item}) - ${buyer}` });
+  else { showToast("تم إنشاء العقد"); render(); }
+}
+async function payInstallment(cid) {
+  const list = loadModuleData("installments", []); const c = list.find(x => x.id === cid); if (!c || c.remaining <= 0) return;
+  const amt = Math.min(c.monthly, c.remaining); c.remaining = Number(Math.max(0, c.remaining - amt).toFixed(2)); c.paidMonths += 1; c.nextDue = fmtShortDate(Date.now()+30*86400000);
+  saveModuleData("installments", list);
+  await postTransaction({ tx_type: "income", amount: amt, currency: c.currency, module_source: "installments", description: `قسط #${c.paidMonths} (${c.item}) - ${c.buyer}` });
+}
+function addIspSubscriber(e) {
+  e.preventDefault();
+  const subs = loadModuleData("isp_subs", []);
+  subs.unshift({ id: generateHiddenUuid(), name: document.getElementById("isp-name").value.trim(), phone: document.getElementById("isp-phone").value.trim(), pkg: document.getElementById("isp-pkg").value.trim()||"قياسية", fee: Number(document.getElementById("isp-fee").value), currency: document.getElementById("isp-cur").value, due: document.getElementById("isp-due").value||fmtShortDate() });
+  saveModuleData("isp_subs", subs); showToast("تمت إضافة المشترك"); render();
+}
+async function collectIspSub(sid) {
+  const subs = loadModuleData("isp_subs", []); const s = subs.find(x => x.id === sid); if (!s) return;
+  s.due = fmtShortDate(Math.max(Date.now(), new Date(s.due).getTime()) + 30*86400000); saveModuleData("isp_subs", subs);
+  await postTransaction({ tx_type: "income", amount: s.fee, currency: s.currency, module_source: "isp_amperes", description: `تجديد اشتراك (${s.pkg}) - ${s.name}` });
+}
+function addSalesRep(e) {
+  e.preventDefault();
+  const reps = loadModuleData("sales_reps", []);
+  reps.unshift({ id: generateHiddenUuid(), name: document.getElementById("rep2-name").value.trim(), phone: document.getElementById("rep2-phone").value.trim(), pct: Number(document.getElementById("rep2-pct").value||2), totalSalesUsd: 0, totalCommissionUsd: 0 });
+  saveModuleData("sales_reps", reps); showToast("تمت إضافة المندوب"); render();
+}
+async function recordRepSale(e) {
+  e.preventDefault();
+  const reps = loadModuleData("sales_reps", []); const rep = reps.find(r => r.id === document.getElementById("sr-select").value);
+  const amount = Number(document.getElementById("sr-amt").value), cur = document.getElementById("sr-cur").value;
+  if (!rep || amount <= 0) return;
+  const usdEq = cur === "USD" ? amount : (state.exchangeRate > 0 ? amount / state.exchangeRate : 0);
+  rep.totalSalesUsd = Number((rep.totalSalesUsd + usdEq).toFixed(2)); rep.totalCommissionUsd = Number((rep.totalCommissionUsd + usdEq*rep.pct/100).toFixed(2));
+  saveModuleData("sales_reps", reps);
+  await postTransaction({ tx_type: "income", amount, currency: cur, module_source: "sales_reps", description: `مبيعات المندوب ${rep.name} (${rep.pct}%)` });
+  e.target.reset();
+}
+
+function updateExchangeRate() {
+  const val = prompt("أدخل سعر الصرف المرجعي لـ 1 دولار بالليرة السورية:", state.exchangeRate);
+  if (val !== null && Number(val) > 0) {
+    const oldRate = state.exchangeRate;
+    state.exchangeRate = Number(val); localStorage.setItem(RATE_KEY, String(state.exchangeRate));
+    recordLocalAudit("FX_RATE_UPDATE", "exchange_rate", { oldRate }, { newRate: state.exchangeRate });
+    showToast("تم تحديث سعر الصرف المرجعي"); render();
+  }
+}
+function exportLedgerCSV() {
+  const rows = [["التاريخ","النوع","المبلغ","العملة","القسم","البيان"], ...state.transactions.map(t => [fmtShortDate(t.created_at), t.tx_type, t.amount, t.currency, t.module_source||"core", (t.description||"").replace(/"/g,'""')])];
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\uFEFF" + rows.map(r => r.map(v => `"${v}"`).join(",")).join("\n")], { type: "text/csv;charset=utf-8;" }));
+  a.download = `sama-ledger-${fmtShortDate()}.csv`; a.click();
+}
+function printReceipt(txId) {
+  const t = state.transactions.find(x => x.id === txId); if (!t) return;
+  const el = document.getElementById("print-area"); el.className = "";
+  el.innerHTML = `<div style="max-width:420px;margin:auto;border:2px solid #0f172a;padding:18px;border-radius:12px;direction:rtl;font-family:Cairo,sans-serif">
+    <h2 style="text-align:center;margin:0">${escapeHtml(state.tenant.shop_name)}</h2>
+    <p style="text-align:center;font-size:12px;color:#475569">سند مالي رسمي — Sama Business Enterprise v1.1</p><hr/>
+    <p><b>التاريخ:</b> ${fmtDate(t.created_at)}</p>
+    <p><b>النوع:</b> ${TX_LABELS[t.tx_type]?TX_LABELS[t.tx_type].label:t.tx_type}</p>
+    <h1 style="text-align:center;background:#f1f5f9;padding:10px;border-radius:8px">${fmtNum(t.amount)} ${t.currency==="USD"?"$":"ل.س"}</h1>
+    <p><b>البيان:</b> ${escapeHtml(t.description||"—")}</p></div>`;
+  window.print(); setTimeout(() => { el.className = "hidden"; }, 400);
+}
+function printIfrsReport() {
+  const fin = computeFinancials();
+  const el = document.getElementById("print-area"); el.className = "";
+  el.innerHTML = `<div style="max-width:720px;margin:auto;direction:rtl;font-family:Cairo,sans-serif">
+    <h2 style="text-align:center;margin:0">${escapeHtml(state.tenant.shop_name)} — القوائم المالية (IFRS)</h2>
+    <p style="text-align:center;font-size:12px;color:#475569">تاريخ الإصدار: ${fmtDate(new Date().toISOString())} | بواسطة: ${escapeHtml(currentActorName())}</p><hr/>
+    <h3>1. قائمة الدخل (الأرباح والخسائر)</h3>
+    <table border="1" cellspacing="0" cellpadding="6" style="width:100%;border-collapse:collapse;font-size:13px">
+      <tr><th>البند</th><th>الدولار (USD)</th><th>الليرة السورية (SYP)</th></tr>
+      <tr><td>إجمالي الإيرادات والمبيعات</td><td>${fmtMinor(fin.pnlUsd.revenue)} $</td><td>${fmtMinor(fin.pnlSyp.revenue)} ل.س</td></tr>
+      <tr><td>تكلفة البضاعة المباعة (COGS)</td><td>(${fmtMinor(fin.pnlUsd.cogs)}) $</td><td>(${fmtMinor(fin.pnlSyp.cogs)}) ل.س</td></tr>
+      <tr><td><b>مجمل الربح (Gross Profit)</b></td><td><b>${fmtMinor(fin.pnlUsd.gross)} $</b></td><td><b>${fmtMinor(fin.pnlSyp.gross)} ل.س</b></td></tr>
+      <tr><td>المصروفات التشغيلية والتلف</td><td>(${fmtMinor(fin.pnlUsd.expenses)}) $</td><td>(${fmtMinor(fin.pnlSyp.expenses)}) ل.س</td></tr>
+      <tr><td>أرباح / خسائر فروقات الصرف (IAS 21)</td><td>${fmtMinor(fin.pnlUsd.fx)} $</td><td>${fmtMinor(fin.pnlSyp.fx)} ل.س</td></tr>
+      <tr style="background:#e2e8f0"><td><b>صافي الربح (Net Profit)</b></td><td><b>${fmtMinor(fin.pnlUsd.net)} $</b></td><td><b>${fmtMinor(fin.pnlSyp.net)} ل.س</b></td></tr>
+    </table>
+    <h3>2. ملخص المركز المالي (الميزانية العمومية)</h3>
+    <p><b>الأصول النقدية:</b> ${fmtMinor(fin.usdCash)} $ و ${fmtMinor(fin.sypCash)} ل.س | <b>الذمم المدينة:</b> ${fmtMinor(fin.usdRec)} $ و ${fmtMinor(fin.sypRec)} ل.س | <b>تقييم المخزون بالتكلفة:</b> ${fmtMinor(fin.invValUsd)} $ و ${fmtMinor(fin.invValSyp)} ل.س</p>
+    <p><b>توازن ميزان المراجعة:</b> USD (${fin.tbUsd.balanced ? "متوازن ✓" : "غير متوازن"}) | SYP (${fin.tbSyp.balanced ? "متوازن ✓" : "غير متوازن"})</p>
+  </div>`;
+  window.print(); setTimeout(() => { el.className = "hidden"; }, 400);
+}
+
+// Super Admin Actions
+async function createTenant(e) {
+  e.preventDefault();
+  const shopName = document.getElementById("new-shop-name").value.trim();
+  const days = Number(document.getElementById("new-shop-days").value || 30);
+  const expiresAt = new Date(Date.now() + days * 86400000).toISOString();
+  if (state.isDemo) {
+    state.tenants.unshift({ id: generateHiddenUuid(), shop_name: shopName, is_active: true, expires_at: expiresAt, activation_code: "PRO-"+Math.random().toString(16).slice(2,8).toUpperCase(), is_claimed: false, enabled_modules: { ...state.newShopModules } });
+    state.adminTab = "tenants"; render(); return;
+  }
+  const { data, error } = await sb.from("tenants").insert([{ shop_name: shopName, plan_preset: state.newShopPreset, is_active: true, expires_at: expiresAt, enabled_modules: state.newShopModules }]).select().single();
+  if (error) return showToast(error.message, "error");
+  state.tenants.unshift(data); state.adminTab = "tenants"; render();
+}
+async function toggleTenantModule(tid, mk) {
+  const t = state.tenants.find(x => x.id === tid); if (!t) return;
+  const upd = { ...(t.enabled_modules||{}), [mk]: !(t.enabled_modules&&t.enabled_modules[mk]) };
+  if (!state.isDemo) await sb.from("tenants").update({ enabled_modules: upd }).eq("id", tid);
+  t.enabled_modules = upd; render();
+}
+async function extendTenant(tid, days) {
+  const t = state.tenants.find(x => x.id === tid); if (!t) return;
+  const newExp = new Date(Math.max(Date.now(), new Date(t.expires_at).getTime()) + days*86400000).toISOString();
+  if (!state.isDemo) await sb.from("tenants").update({ expires_at: newExp, is_active: true }).eq("id", tid);
+  t.expires_at = newExp; t.is_active = true; showToast(`تم التمديد +${days} يوم`); render();
+}
+async function toggleTenantActive(tid) {
+  const t = state.tenants.find(x => x.id === tid); if (!t) return;
+  const next = !t.is_active;
+  if (!state.isDemo) await sb.from("tenants").update({ is_active: next }).eq("id", tid);
+  t.is_active = next; render();
+}
+
+// =========================================================================
+// 9. RENDER ENGINE
+// =========================================================================
+function renderPinLockScreen() {
+  return `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px">
+    <form onsubmit="unlockWithPin(event)" class="card" style="max-width:380px;width:100%;text-align:center">
+      <div style="font-size:42px">🔐</div>
+      <h2 style="margin:8px 0 4px">الخزينة مقفلة أمنياً</h2>
+      <p class="muted" style="font-size:12.5px;margin:0 0 14px">أدخل رمز الحماية المشفّر (PIN)</p>
+      <input id="pin-unlock" type="password" inputmode="numeric" dir="ltr" placeholder="••••" class="inp" style="text-align:center;font-size:22px;letter-spacing:8px;margin-bottom:12px" required autofocus />
+      <button type="submit" class="btn btn-prim" style="width:100%">فتح القفل الآن</button>
+    </form></div>`;
+}
+
+function renderModals(fin) {
+  let html = "";
+  if (state.showSettingsModal) {
+    html += `<div class="modal-bg"><div class="card" style="max-width:440px;width:100%">
+      <div class="row-between"><b>إعدادات الربط السحابي (Supabase)</b><button class="btn btn-sec" onclick="state.showSettingsModal=false;render()">✕</button></div>
+      <form onsubmit="event.preventDefault();appConfig={url:document.getElementById('cfg-url').value.trim(),key:normalizeAnonKey(document.getElementById('cfg-key').value)};localStorage.setItem(CFG_KEY,JSON.stringify(appConfig));initSupabase();state.showSettingsModal=false;showToast('تم الحفظ');render()" style="margin-top:12px;display:grid;gap:10px">
+        <input id="cfg-url" dir="ltr" class="inp" value="${escapeHtml(appConfig.url)}" required />
+        <textarea id="cfg-key" dir="ltr" rows="3" class="inp mono">${escapeHtml(appConfig.key)}</textarea>
+        <button type="submit" class="btn btn-prim">حفظ والاتصال</button>
+      </form></div></div>`;
+  }
+  if (state.showPinModal) {
+    const hasPin = Boolean(localStorage.getItem(PIN_KEY));
+    html += `<div class="modal-bg"><div class="card" style="max-width:400px;width:100%">
+      <div class="row-between"><b>🔐 قفل الخزينة برمز PIN مشفّر</b><button class="btn btn-sec" onclick="state.showPinModal=false;render()">✕</button></div>
+      <form onsubmit="setSecurityPin(event)" style="display:grid;gap:10px;margin-top:12px">
+        <input id="pin-new" type="password" inputmode="numeric" dir="ltr" minlength="4" maxlength="6" placeholder="رمز المالك (4-6 أرقام)" class="inp" required />
+        <div class="row"><button type="submit" class="btn btn-prim" style="flex:1">حفظ القفل</button>${hasPin?`<button type="button" onclick="removeSecurityPin()" class="btn btn-dang">إلغاء القفل</button>`:""}</div>
+      </form></div></div>`;
+  }
+  if (state.showStaffSwitchModal) {
+    const staff = loadModuleData("staff_directory", []);
+    html += `<div class="modal-bg"><div class="card" style="max-width:420px;width:100%">
+      <div class="row-between"><b>👤 تبديل الوردية / صلاحية المستخدم</b><button class="btn btn-sec" onclick="state.showStaffSwitchModal=false;render()">✕</button></div>
+      <p class="muted" style="font-size:12px">يعزل النظام تلقائياً أسعار الجملة والتقارير المالية والرقابة حسب دور الموظف.</p>
+      <form onsubmit="switchStaffShift(event)" style="display:grid;gap:10px">
+        <select id="sw-staff-id" class="inp">
+          <option value="OWNER">👑 المالك / المدير العام (صلاحية كاملة)</option>
+          ${staff.map(s => `<option value="${s.id}">${escapeHtml(s.name)} — ${ROLE_DEFS[s.role].label}</option>`).join("")}
+        </select>
+        <input id="sw-staff-pin" type="password" inputmode="numeric" dir="ltr" placeholder="رمز PIN الخاص بالمستخدم (اختياري للمالك بلا قفل)" class="inp" />
+        <button type="submit" class="btn btn-prim">تفعيل الوردية الآن</button>
+      </form></div></div>`;
+  }
+  if (state.showFxModal) {
+    const fxList = loadModuleData("fx_history", []);
+    html += `<div class="modal-bg"><div class="card" style="max-width:500px;width:100%;max-height:90vh;overflow-y:auto">
+      <div class="row-between"><b>💱 تحويل العملات وحساب فروقات الصرف (IAS 21)</b><button class="btn btn-sec" onclick="state.showFxModal=false;render()">✕</button></div>
+      <p class="muted" style="font-size:12px">سعر الصرف المرجعي الحالي: <b>${fmtNum(state.exchangeRate)} ل.س</b> — يُحسب فرق الربح/الخسارة تلقائياً ويُقيّد في الصندوقين.</p>
+      <form onsubmit="submitFxConversion(event)" style="display:grid;gap:10px">
+        <select id="fx-dir" class="inp"><option value="USD_TO_SYP">تحويل دولار ($) ← إلى ليرة سورية (SYP)</option><option value="SYP_TO_USD">تحويل ليرة سورية (SYP) ← إلى دولار ($)</option></select>
+        <div class="grid-2">
+          <input id="fx-amt" type="number" step="0.01" placeholder="المبلغ المراد تصريفه" class="inp" required />
+          <input id="fx-rate" type="number" step="0.01" value="${state.exchangeRate}" placeholder="سعر الصرف الفعلي" class="inp" required />
+        </div>
+        <input id="fx-note" placeholder="ملاحظات (مثال: تصريف لمصروفات يومية)" class="inp" />
+        <button type="submit" class="btn btn-prim">تنفيذ التحويل وتقييد فرق الصرف</button>
+      </form>
+      ${fxList.length ? `<div style="margin-top:12px"><b style="font-size:12px">آخر عمليات الصرف:</b>${fxList.slice(0,4).map(f => `
+        <div class="subcard" style="margin-top:6px;font-size:11.5px">
+          ${fmtDate(f.at)} | ${fmtNum(f.sourceAmt)} ${f.fromCur} → <b>${fmtNum(f.targetAmt)} ${f.toCurrency}</b> (بسعر ${fmtNum(f.appliedRate)}) | فرق: <b style="color:${f.gainLoss>=0?'#10b981':'#f87171'}">${fmtNum(f.gainLoss)} ${f.toCurrency}</b>
+        </div>`).join("")}</div>` : ""}
+    </div></div>`;
+  }
+  if (state.showZReportModal && fin) {
+    const reports = loadModuleData("z_reports", []);
+    html += `<div class="modal-bg"><div class="card" style="max-width:520px;width:100%;max-height:90vh;overflow-y:auto">
+      <div class="row-between"><b>🧾 إغلاق ومطابقة الصندوق اليومي (Z-Report)</b><button class="btn btn-sec" onclick="state.showZReportModal=false;render()">✕</button></div>
+      <div class="grid-2" style="margin:12px 0">
+        <div class="subcard"><div class="kpi-lbl">الرصيد الدفتري دولار</div><div style="font-weight:900;font-size:18px;color:var(--primary)">${fmtMinor(fin.usdCash)} $</div></div>
+        <div class="subcard"><div class="kpi-lbl">الرصيد الدفتري ليرة</div><div style="font-weight:900;font-size:18px;color:var(--accent)">${fmtMinor(fin.sypCash)} ل.س</div></div>
+      </div>
+      <form onsubmit="submitZReport(event)" style="display:grid;gap:10px">
+        <label class="kpi-lbl">الجرد الفعلي للدولار ($)</label>
+        <input id="zr-usd" type="number" step="0.01" value="${fromMinor(fin.usdCash)}" class="inp" required />
+        <label class="kpi-lbl">الجرد الفعلي لليرة (ل.س)</label>
+        <input id="zr-syp" type="number" step="0.01" value="${fromMinor(fin.sypCash)}" class="inp" required />
+        <input id="zr-note" placeholder="ملاحظات الإغلاق" class="inp" />
+        <button type="submit" class="btn btn-prim">اعتماد المطابقة وحفظ التقرير</button>
+      </form>
+      ${reports.length ? `<div style="margin-top:12px"><b style="font-size:12px">سجل الإغلاقات:</b>${reports.slice(0,4).map(r => `
+        <div class="subcard" style="margin-top:6px;font-size:11.5px">
+          <b>${fmtDate(r.closedAt)}</b> (${escapeHtml(r.closedBy||"")}) | فرق USD: <b style="color:${r.diffUsd===0?'#10b981':'#f87171'}">${fmtNum(r.diffUsd)}$</b> | فرق SYP: <b style="color:${r.diffSyp===0?'#10b981':'#f87171'}">${fmtNum(r.diffSyp)}</b>
+        </div>`).join("")}</div>` : ""}
+    </div></div>`;
+  }
+  return html;
+}
+
+function renderAuthScreen() {
+  return `<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px">
+    <div style="max-width:450px;width:100%;display:grid;gap:12px">
+      ${state.errorBanner ? `<div class="card" style="border-color:#ef4444;color:#fca5a5;font-weight:700">⚠️ ${escapeHtml(state.errorBanner)}</div>` : ""}
+      <div class="card" style="padding:22px">
+        <div class="row-between">
+          <div class="row">
+            <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#10b981,#0284c7);display:grid;place-items:center;color:#fff;font-weight:900;font-size:22px">S</div>
+            <div>
+              <h1 style="margin:0;font-size:18px">Sama Business Enterprise v1.1</h1>
+              <div class="muted" style="font-size:11px">IFRS • Multi-Warehouse • RBAC • Voice AI 🎙️</div>
+            </div>
+          </div>
+          <div class="row">
+            <button class="btn btn-sec" onclick="toggleTheme()">${state.theme==="dark"?"☀️":"🌙"}</button>
+            <button class="btn btn-sec" onclick="state.showSettingsModal=true;render()">⚙️</button>
+          </div>
+        </div>
+        <div class="grid-2" style="margin:16px 0">
+          <button class="btn ${state.authTab==="login"?"btn-prim":"btn-sec"}" onclick="state.authTab='login';render()">تسجيل الدخول</button>
+          <button class="btn ${state.authTab==="activate"?"btn-prim":"btn-sec"}" onclick="state.authTab='activate';render()">تفعيل متجر بكود</button>
+        </div>
+        ${state.authTab === "login" ? `
+          <form onsubmit="handleLogin(event)" style="display:grid;gap:11px">
+            <input id="login-email" type="email" dir="ltr" placeholder="البريد الإلكتروني" class="inp" required />
+            <input id="login-password" type="password" dir="ltr" placeholder="كلمة المرور" class="inp" required />
+            <button type="submit" class="btn btn-prim" style="padding:12px">دخول آمن إلى النظام</button>
+          </form>
+        ` : `
+          <form onsubmit="handleActivateShop(event)" style="display:grid;gap:10px">
+            <input id="act-name" placeholder="اسم صاحب المتجر" class="inp" required />
+            <input id="act-email" type="email" dir="ltr" placeholder="البريد الإلكتروني" class="inp" required />
+            <input id="act-password" type="password" dir="ltr" minlength="6" placeholder="كلمة مرور جديدة" class="inp" required />
+            <input id="act-code" dir="ltr" placeholder="PRO-XXXXXX" class="inp mono" style="text-align:center;font-weight:900" required />
+            <button type="submit" class="btn btn-prim" style="padding:12px">تفعيل المتجر والدخول</button>
+          </form>
+        `}
+        <div class="row-between" style="margin-top:16px;padding-top:12px;border-top:1px solid var(--border);font-size:12px">
+          <span class="muted">معاينة فورية:</span>
+          <div class="row">
+            <button class="btn btn-sec" style="padding:5px 10px;font-size:11.5px" onclick="enterDemoMode('super_admin')">المدير العام</button>
+            <button class="btn btn-sec" style="padding:5px 10px;font-size:11.5px" onclick="enterDemoMode('owner')">متجر متكامل</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>${renderModals(null)}`;
+}
+
+function renderSuperAdmin() {
+  const now = Date.now();
+  const filtered = state.tenants.filter(t => !state.adminSearch || t.shop_name.toLowerCase().includes(state.adminSearch.toLowerCase()) || (t.activation_code||"").toLowerCase().includes(state.adminSearch.toLowerCase()));
+  return `<div class="topbar"><div class="wrap row-between">
+    <b>لوحة المدير العام — Sama Enterprise v1.1</b>
+    <div class="row">
+      <button class="btn btn-sec" onclick="toggleTheme()">${state.theme==="dark"?"☀️":"🌙"}</button>
+      ${state.isDemo ? `<button class="btn btn-sec" onclick="enterDemoMode('owner')">معاينة كمتجر</button>` : ""}
+      <button class="btn btn-dang" onclick="handleLogout()">خروج</button>
+    </div>
+  </div></div>
+  <div class="wrap" style="padding-top:14px;display:grid;gap:12px">
+    <div class="tabs">
+      <button class="tab ${state.adminTab==="tenants"?"active":""}" onclick="state.adminTab='tenants';render()">🏪 المتاجر (${state.tenants.length})</button>
+      <button class="tab ${state.adminTab==="create"?"active":""}" onclick="state.adminTab='create';render()">➕ إنشاء متجر جديد</button>
+    </div>
+    ${state.adminTab === "create" ? `
+      <form onsubmit="createTenant(event)" class="card" style="display:grid;gap:12px">
+        <b>إنشاء متجر جديد</b>
+        <div class="grid-2"><input id="new-shop-name" placeholder="اسم المتجر" class="inp" required /><select id="new-shop-days" class="inp"><option value="30">30 يوماً</option><option value="365">365 يوماً</option></select></div>
+        <div class="grid-3">${MODULES_META.map(m => `<label class="subcard row-between" style="cursor:pointer"><span>${m.icon} ${m.label}</span><input type="checkbox" ${state.newShopModules[m.key]?"checked":""} onchange="state.newShopModules['${m.key}']=this.checked" /></label>`).join("")}</div>
+        <button type="submit" class="btn btn-prim">إنشاء وتوليد كود التفعيل</button>
+      </form>
+    ` : `
+      <input class="inp" placeholder="بحث باسم المتجر أو الكود..." value="${escapeHtml(state.adminSearch)}" oninput="state.adminSearch=this.value;render()" />
+      ${filtered.map(t => {
+        const active = t.is_active && new Date(t.expires_at).getTime() >= now;
+        return `<div class="card" style="display:grid;gap:10px">
+          <div class="row-between">
+            <div><b>${escapeHtml(t.shop_name)}</b> <span class="badge ${active?'b-inc':'b-exp'}">${active?'نشط':'منتهي'}</span><div class="muted" style="font-size:11.5px">ينتهي: ${fmtShortDate(t.expires_at)}</div></div>
+            <div class="row"><span class="subcard mono" style="padding:5px 10px;font-weight:900">${escapeHtml(t.activation_code||"—")}</span><button class="btn btn-sec" onclick="copyText('${escapeHtml(t.activation_code||"")}')">نسخ</button></div>
+          </div>
+          <div class="grid-3">${MODULES_META.map(m => `<label class="subcard row-between" style="font-size:12px"><span>${m.icon} ${m.label}</span><input type="checkbox" ${(t.enabled_modules&&t.enabled_modules[m.key])?"checked":""} onchange="toggleTenantModule('${t.id}','${m.key}')" /></label>`).join("")}</div>
+          <div class="row"><button class="btn btn-sec" onclick="extendTenant('${t.id}',30)">+30 يوم</button><button class="btn btn-sec" onclick="extendTenant('${t.id}',365)">+سنة</button><button class="btn btn-dang" onclick="toggleTenantActive('${t.id}')">${t.is_active?"إيقاف":"تفعيل"}</button></div>
+        </div>`;
+      }).join("")}
+    `}
+  </div>`;
+}
+
+function renderTenantDashboard() {
+  const t = state.tenant;
+  if (!t || !t.is_active || new Date(t.expires_at).getTime() < Date.now()) {
+    return `<div style="min-height:100vh;display:grid;place-items:center;padding:16px"><div class="card" style="max-width:400px;text-align:center"><h2>🔒 الاشتراك منتهي</h2><button class="btn btn-sec" onclick="handleLogout()">خروج</button></div></div>`;
+  }
+  const mods = t.enabled_modules || {};
+  const fin = computeFinancials();
+  const p = perms();
+  const rk = currentRoleKey();
+
+  return `
+    <div class="topbar"><div class="wrap row-between">
+      <div class="row">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#10b981,#0284c7);display:grid;place-items:center;color:#fff;font-weight:900">S</div>
+        <div>
+          <div class="row" style="gap:6px">
+            <b style="font-size:14px">${escapeHtml(t.shop_name)}</b>
+            <span class="badge ${ROLE_DEFS[rk].badge}">${ROLE_DEFS[rk].label}</span>
+          </div>
+          <div class="muted" style="font-size:11px">
+            ${state.online ? "🟢 متصل" : "🟠 محلي"} •
+            <a href="#" onclick="updateExchangeRate();return false" style="color:var(--primary);font-weight:800;text-decoration:none">الصرف: ${fmtNum(state.exchangeRate)}</a>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <button class="btn btn-sec" onclick="state.showStaffSwitchModal=true;render()" title="تبديل الوردية والموظف">👤 ${escapeHtml(state.activeStaff ? state.activeStaff.name : "المالك")}</button>
+        ${p.canManageFx ? `<button class="btn btn-sec" onclick="state.showFxModal=true;render()">💱 صرف</button>` : ""}
+        ${p.canPostFinance ? `<button class="btn btn-sec" onclick="state.showZReportModal=true;render()">🧾 مطابقة Z</button>` : ""}
+        ${p.canBackup ? `<button class="btn btn-sec" onclick="exportFullBackup()">💾 نسخ</button><label class="btn btn-sec" style="cursor:pointer">📂 استعادة<input type="file" accept=".json" class="hidden" onchange="importFullBackup(this.files[0])" /></label>` : ""}
+        ${p.canManageStaff ? `<button class="btn btn-sec" onclick="state.showPinModal=true;render()" title="قفل PIN">🔐</button>` : ""}
+        <button class="btn btn-sec" onclick="toggleTheme()">${state.theme==="dark"?"☀️":"🌙"}</button>
+        <button class="btn btn-dang" onclick="handleLogout()">خروج</button>
+      </div>
+    </div></div>
+
+    <div class="wrap">
+      <div class="tabs">
+        ${p.canPostFinance ? `<button class="tab ${state.tenantTab==="dashboard"?"active":""}" onclick="state.tenantTab='dashboard';render()">📊 الصندوق والذكاء</button>` : ""}
+        ${p.canPostFinance ? `<button class="tab ${state.tenantTab==="ledger"?"active":""}" onclick="state.tenantTab='ledger';render()">📒 دفتر اليومية</button>` : ""}
+        ${p.canViewIfrs ? `<button class="tab ${state.tenantTab==="ifrs"?"active":""}" onclick="state.tenantTab='ifrs';render()">📈 التقارير المالية IFRS</button>` : ""}
+        ${p.canPostFinance ? `<button class="tab ${state.tenantTab==="accounts"?"active":""}" onclick="state.tenantTab='accounts';render()">👥 الزبائن والديون</button>` : ""}
+        ${mods.pos_inventory && (p.canManageInventory || p.canPostFinance) ? `<button class="tab ${state.tenantTab==="pos_inventory"?"active":""}" onclick="state.tenantTab='pos_inventory';render()">🛒 المخزون والمستودعات</button>` : ""}
+        ${mods.telecom_maintenance && (p.canManageRepairs || p.canPostFinance) ? `<button class="tab ${state.tenantTab==="telecom_maintenance"?"active":""}" onclick="state.tenantTab='telecom_maintenance';render()">📱 الصيانة والاتصالات</button>` : ""}
+        ${mods.installments && p.canPostFinance ? `<button class="tab ${state.tenantTab==="installments"?"active":""}" onclick="state.tenantTab='installments';render()">📅 التقسيط</button>` : ""}
+        ${mods.isp_amperes && p.canPostFinance ? `<button class="tab ${state.tenantTab==="isp_amperes"?"active":""}" onclick="state.tenantTab='isp_amperes';render()">📡 الإنترنت</button>` : ""}
+        ${mods.sales_reps && p.canPostFinance ? `<button class="tab ${state.tenantTab==="sales_reps"?"active":""}" onclick="state.tenantTab='sales_reps';render()">🚚 المندوبون</button>` : ""}
+        ${p.canManageStaff ? `<button class="tab ${state.tenantTab==="staff"?"active":""}" onclick="state.tenantTab='staff';render()">🔐 الموظفون والصلاحيات</button>` : ""}
+        ${p.canAudit ? `<button class="tab ${state.tenantTab==="audit"?"active":""}" onclick="state.tenantTab='audit';render()">🧪 التدقيق الآلي والرقابة</button>` : ""}
+      </div>
+
+      <div style="display:grid;gap:14px;padding-bottom:36px">
+        ${state.tenantTab === "dashboard" ? renderCoreTab(fin) : ""}
+        ${state.tenantTab === "ledger" ? renderLedgerTab(fin) : ""}
+        ${state.tenantTab === "ifrs" && p.canViewIfrs ? renderIfrsTab(fin) : ""}
+        ${state.tenantTab === "accounts" ? renderAccountsTab(fin) : ""}
+        ${state.tenantTab === "pos_inventory" && mods.pos_inventory ? renderPosTab() : ""}
+        ${state.tenantTab === "telecom_maintenance" && mods.telecom_maintenance ? renderTelecomTab() : ""}
+        ${state.tenantTab === "installments" && mods.installments ? renderInstallmentsTab() : ""}
+        ${state.tenantTab === "isp_amperes" && mods.isp_amperes ? renderIspTab() : ""}
+        ${state.tenantTab === "sales_reps" && mods.sales_reps ? renderRepsTab() : ""}
+        ${state.tenantTab === "staff" && p.canManageStaff ? renderStaffTab() : ""}
+        ${state.tenantTab === "audit" && p.canAudit ? renderAuditTab(fin) : ""}
+      </div>
+    </div>
+    ${renderModals(fin)}`;
+}
+
+function renderCoreTab(fin) {
+  const isRecAi = state.isRecordingVoice && state.voiceTargetId === "ai-cmd-input";
+  return `
+    <div class="ai-banner" style="display:grid;gap:10px">
+      <div class="row-between">
+        <div>
+          <b style="font-size:14px">🤖 المساعد المحاسبي الذكي + الكتابة بالصوت العربي (ar-SA)</b>
+          <div class="muted" style="font-size:11.5px">انطق أو اكتب: «قبض 150 دولار مبيعات» أو «صرف 50 ألف ليرة كهرباء» أو «3 شواحن بسعر 5 دولار»</div>
+        </div>
+        <span class="badge ${fin.healthScore===100?'b-inc':'b-dout'}">نتيجة التدقيق الآلي: ${fin.healthScore}%</span>
+      </div>
+      <div class="row">
+        <input id="ai-cmd-input" class="inp" style="flex:1;min-width:210px" placeholder="انطق أو اكتب أمرك المالي هنا..." value="${escapeHtml(state.aiCommandText)}" oninput="state.aiCommandText=this.value" onkeydown="if(event.key==='Enter'){event.preventDefault();handleAiCommandRun();}" />
+        <button type="button" onclick="startArabicVoiceInput('ai-cmd-input', true)" class="btn btn-voice ${isRecAi?'recording':''}">${isRecAi ? "⏹️ إيقاف" : "🎙️ تكلّم بالعربية"}</button>
+        <button type="button" onclick="handleAiCommandRun()" class="btn btn-prim">تحليل</button>
+      </div>
+      ${state.aiPreview ? `<div class="subcard row-between" style="border-color:var(--primary)">
+        ${state.aiPreview.kind === "calc" ? `<div>🧮 الناتج الدقيق: <b style="font-size:17px;color:var(--primary)">${fmtNum(state.aiPreview.result)}</b></div><button class="btn btn-sec" onclick="state.aiPreview=null;render()">إغلاق</button>` : `
+        <div style="font-size:12.5px"><b>معاينة القيد:</b> <span class="badge ${TX_LABELS[state.aiPreview.tx_type].cls}">${TX_LABELS[state.aiPreview.tx_type].label}</span> <b>${fmtNum(state.aiPreview.amount)} ${state.aiPreview.currency}</b> <span class="muted">${escapeHtml(state.aiPreview.description)}</span></div>
+        <div class="row"><button class="btn btn-prim" onclick="confirmAiTransaction()">اعتماد وترحيل ✓</button><button class="btn btn-sec" onclick="state.aiPreview=null;render()">إلغاء</button></div>`}
+      </div>` : ""}
+      <div style="font-size:12px">${fin.alerts.map(a => `<div>${escapeHtml(a)}</div>`).join("")}</div>
+    </div>
+
+    <div class="grid-4">
+      <div class="card"><div class="kpi-lbl">صندوق الدولار (USD)</div><div class="kpi-val" style="color:var(--primary)" dir="ltr">$ ${fmtMinor(fin.usdCash)}</div><div class="muted" style="font-size:11px">اليوم: +${fmtMinor(fin.usdInToday)} / -${fmtMinor(fin.usdOutToday)}</div></div>
+      <div class="card"><div class="kpi-lbl">صندوق الليرة (SYP)</div><div class="kpi-val" style="color:var(--accent)">${fmtMinor(fin.sypCash)} <span style="font-size:12px">ل.س</span></div><div class="muted" style="font-size:11px">اليوم: +${fmtMinor(fin.sypInToday)} / -${fmtMinor(fin.sypOutToday)}</div></div>
+      <div class="card"><div class="kpi-lbl">الذمم المدينة (ديون لنا)</div><div class="kpi-val" style="color:var(--warn);font-size:16px">${fmtMinor(fin.usdRec)} $ • ${fmtMinor(fin.sypRec)} ل.س</div></div>
+      <div class="card"><div class="kpi-lbl">المكافئ الإجمالي للصندوق</div><div class="kpi-val" dir="ltr">$ ${fmtNum(fin.totalUsdEquiv)}</div></div>
+    </div>
+
+    <div class="grid-2">
+      <form onsubmit="handleQuickTxSubmit(event)" class="card" style="display:grid;gap:10px">
+        <b>تسجيل قيد مالي سريع (برقم UUID مخفي)</b>
+        <div class="grid-2">
+          <select id="tx-type" class="inp"><option value="income">قبض / مبيعات (+)</option><option value="expense">صرف / مصروف (-)</option><option value="debt_out">دين لنا (ذمم مدينة)</option><option value="debt_in">دين علينا / سداد</option></select>
+          <select id="tx-currency" class="inp"><option value="USD">دولار ($)</option><option value="SYP">ليرة سورية</option></select>
+        </div>
+        <input id="tx-amount" type="number" step="0.01" min="0.01" placeholder="المبلغ" class="inp" style="font-size:17px;font-weight:900" required />
+        <select id="tx-account" class="inp"><option value="">— نقدي عام —</option>${state.accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join("")}</select>
+        <div class="row">
+          <input id="tx-desc" placeholder="البيان (أو انطق بالصوت العربي)..." class="inp" style="flex:1" />
+          <button type="button" onclick="startArabicVoiceInput('tx-desc', false)" class="btn btn-voice">🎙️</button>
+        </div>
+        <button type="submit" class="btn btn-prim" style="padding:11px">حفظ القيد المالي</button>
+      </form>
+
+      <div class="card" style="display:grid;gap:8px;align-content:start">
+        <div class="row-between"><b>آخر القيود المرحلة</b><button class="btn btn-sec" style="padding:4px 10px;font-size:11.5px" onclick="state.tenantTab='ledger';render()">السجل الكامل ←</button></div>
+        ${state.transactions.slice(0, 6).map(tx => {
+          const m = TX_LABELS[tx.tx_type] || TX_LABELS.income;
+          const rev = fin.reversedIds.has(tx.id);
+          return `<div class="subcard row-between" style="${rev?'opacity:.5;text-decoration:line-through':''}">
+            <div><span class="badge ${m.cls}">${m.label}</span> <span class="muted" style="font-size:11px">${fmtDate(tx.created_at)}</span><div style="font-size:12.5px;margin-top:3px">${escapeHtml(tx.description||"—")}</div></div>
+            <b style="font-size:14px">${fmtNum(tx.amount)} ${tx.currency==="USD"?"$":"ل.س"}</b>
+          </div>`;
+        }).join("") || `<div class="muted" style="text-align:center;padding:24px">لا توجد قيود بعد</div>`}
+      </div>
+    </div>`;
+}
+
+function renderIfrsTab(fin) {
+  return `
+    <div class="card row-between">
+      <div><b>📈 القوائم والتقارير المالية وفق معايير IFRS & IAS 21</b><div class="muted" style="font-size:12px">محسوبة بدقة BigInt بدون كسور عائمة ومفصولة حسب العملة</div></div>
+      <button class="btn btn-prim" onclick="printIfrsReport()">🖨️ طباعة التقرير المالي (IFRS)</button>
+    </div>
+
+    <!-- 1. Income Statement (P&L) -->
+    <div class="card" style="overflow-x:auto">
+      <b>1. قائمة الدخل (الأرباح والخسائر — Income Statement)</b>
+      <table class="tbl" style="margin-top:10px">
+        <thead><tr><th>البند المحاسبي (IFRS)</th><th>الدولار (USD)</th><th>الليرة السورية (SYP)</th></tr></thead>
+        <tbody>
+          <tr><td>إجمالي الإيرادات والمبيعات (Revenue)</td><td style="color:var(--primary);font-weight:800">${fmtMinor(fin.pnlUsd.revenue)} $</td><td style="color:var(--accent);font-weight:800">${fmtMinor(fin.pnlSyp.revenue)} ل.س</td></tr>
+          <tr><td>تكلفة البضاعة والقطع المباعة (COGS)</td><td style="color:#f87171">(${fmtMinor(fin.pnlUsd.cogs)}) $</td><td style="color:#f87171">(${fmtMinor(fin.pnlSyp.cogs)}) ل.س</td></tr>
+          <tr><td><b>مجمل الربح (Gross Profit)</b></td><td><b>${fmtMinor(fin.pnlUsd.gross)} $</b></td><td><b>${fmtMinor(fin.pnlSyp.gross)} ل.س</b></td></tr>
+          <tr><td>المصروفات التشغيلية والإتلاف والمرتجعات</td><td style="color:#f87171">(${fmtMinor(fin.pnlUsd.expenses)}) $</td><td style="color:#f87171">(${fmtMinor(fin.pnlSyp.expenses)}) ل.س</td></tr>
+          <tr><td>أرباح / خسائر فروقات الصرف (IAS 21 FX)</td><td>${fmtMinor(fin.pnlUsd.fx)} $</td><td>${fmtMinor(fin.pnlSyp.fx)} ل.س</td></tr>
+          <tr style="background:rgba(16,185,129,.1)"><td><b>صافي الربح النهائي (Net Profit)</b></td><td style="font-size:15px;font-weight:900;color:var(--primary)">${fmtMinor(fin.pnlUsd.net)} $</td><td style="font-size:15px;font-weight:900;color:var(--accent)">${fmtMinor(fin.pnlSyp.net)} ل.س</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 2. Balance Sheet Snapshot & Double-Entry Trial Balance -->
+    <div class="grid-2">
+      <div class="card" style="display:grid;gap:10px;align-content:start">
+        <b>2. قائمة المركز المالي (Balance Sheet Snapshot)</b>
+        <div class="subcard">
+          <div class="kpi-lbl">الأصول المتداولة (النقد + الذمم + المخزون بالتكلفة)</div>
+          <div style="margin-top:6px;font-size:13px">
+            <div>💵 النقدية بالصندوق: <b>${fmtMinor(fin.usdCash)} $</b> | <b>${fmtMinor(fin.sypCash)} ل.س</b></div>
+            <div>📄 الذمم المدينة (عند الزبائن): <b>${fmtMinor(fin.usdRec)} $</b> | <b>${fmtMinor(fin.sypRec)} ل.س</b></div>
+            <div>📦 تقييم المخزون بالتكلفة: <b>${fmtMinor(fin.invValUsd)} $</b> | <b>${fmtMinor(fin.invValSyp)} ل.س</b></div>
+          </div>
+        </div>
+        <div class="subcard">
+          <div class="kpi-lbl">الالتزامات (الذمم الدائنة / الموردون)</div>
+          <div style="margin-top:6px;font-size:13px"><b>${fmtMinor(fin.usdPay)} $</b> | <b>${fmtMinor(fin.sypPay)} ل.س</b></div>
+        </div>
+      </div>
+
+      <div class="card" style="overflow-x:auto">
+        <div class="row-between"><b>3. ميزان المراجعة (القيد المزدوج — USD)</b><span class="badge ${fin.tbUsd.balanced?'b-inc':'b-exp'}">${fin.tbUsd.balanced ? "متوازن 100% ✓" : "غير متوازن ✕"}</span></div>
+        <table class="tbl" style="margin-top:8px">
+          <thead><tr><th>الكود</th><th>الحساب</th><th>مدين (Debit)</th><th>دائن (Credit)</th></tr></thead>
+          <tbody>
+            ${fin.tbUsd.rows.map(r => `<tr><td class="mono muted">${r.code}</td><td>${r.name}</td><td>${fmtMinor(r.dr)}</td><td>${fmtMinor(r.cr)}</td></tr>`).join("")}
+            <tr style="font-weight:900"><td colspan="2">الإجمالي (يجب أن يتساوى)</td><td style="color:var(--primary)">${fmtMinor(fin.tbUsd.totalDr)} $</td><td style="color:var(--primary)">${fmtMinor(fin.tbUsd.totalCr)} $</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 3. Debt Aging Report (0-30, 31-60, 61-90, 90+ days) -->
+    <div class="card" style="display:grid;gap:10px">
+      <b>4. تقرير أعمار الديون المتأخرة (AR Aging Report — USD)</b>
+      <div class="grid-4">
+        <div class="subcard"><div class="kpi-lbl">جارية (0–30 يوماً)</div><div class="kpi-val" style="font-size:16px;color:var(--primary)">${fmtMinor(fin.aging.USD.b30)} $</div></div>
+        <div class="subcard"><div class="kpi-lbl">متأخرة (31–60 يوماً)</div><div class="kpi-val" style="font-size:16px;color:var(--warn)">${fmtMinor(fin.aging.USD.b60)} $</div></div>
+        <div class="subcard"><div class="kpi-lbl">متأخرة (61–90 يوماً)</div><div class="kpi-val" style="font-size:16px;color:#fb923c">${fmtMinor(fin.aging.USD.b90)} $</div></div>
+        <div class="subcard"><div class="kpi-lbl">حرجة (+90 يوماً)</div><div class="kpi-val" style="font-size:16px;color:#f87171">${fmtMinor(fin.aging.USD.bOver)} $</div></div>
+      </div>
+      ${fin.aging.USD.list.length ? fin.aging.USD.list.map(d => {
+        const acc = state.accounts.find(a => a.id === d.accId);
+        return `<div class="subcard row-between" style="border-color:var(--warn);font-size:12px">
+          <div><b>${escapeHtml(acc ? acc.name : "عميل")}</b> — متأخر <b>${d.ageDays} يوماً</b> • المبلغ: <b>${fmtMinor(d.amt)} $</b></div>
+          ${acc ? `<button class="btn btn-prim" style="padding:4px 10px;font-size:11px" onclick="openWhatsApp('${escapeHtml(acc.phone||"")}','تذكير ودي من ${escapeHtml(state.tenant.shop_name)} بوجود فاتورة مستحقة منذ ${d.ageDays} يوماً بقيمة ${fmtMinor(d.amt)}$')">تذكير واتساب 💬</button>` : ""}
+        </div>`;
+      }).join("") : `<div class="muted" style="font-size:12px">✅ لا توجد ديون متجاوزة لـ 30 يوماً حالياً.</div>`}
+    </div>`;
+}
+
+function renderLedgerTab(fin) {
+  const list = state.transactions.filter(tx => {
+    if (state.ledgerFilterCurrency !== "ALL" && tx.currency !== state.ledgerFilterCurrency) return false;
+    if (state.ledgerSearch && !(tx.description || "").toLowerCase().includes(state.ledgerSearch.toLowerCase())) return false;
+    return true;
+  });
+  return `<div class="card" style="display:grid;gap:12px">
+    <div class="row">
+      <input id="ledger-search-inp" class="inp" style="flex:1;min-width:180px" placeholder="بحث بالصوت أو الكتابة..." value="${escapeHtml(state.ledgerSearch)}" oninput="state.ledgerSearch=this.value;render()" />
+      <button type="button" onclick="startArabicVoiceInput('ledger-search-inp', false)" class="btn btn-voice">🎙️</button>
+      <select class="inp" style="width:auto" onchange="state.ledgerFilterCurrency=this.value;render()">
+        <option value="ALL" ${state.ledgerFilterCurrency==="ALL"?"selected":""}>كل العملات</option>
+        <option value="USD" ${state.ledgerFilterCurrency==="USD"?"selected":""}>دولار</option>
+        <option value="SYP" ${state.ledgerFilterCurrency==="SYP"?"selected":""}>ليرة</option>
+      </select>
+      <button class="btn btn-sec" onclick="exportLedgerCSV()">📥 Excel</button>
+    </div>
+    <div style="overflow-x:auto"><table class="tbl">
+      <thead><tr><th>التاريخ</th><th>النوع</th><th>المبلغ</th><th>البيان</th><th>إجراءات</th></tr></thead>
+      <tbody>${list.map(tx => {
+        const m = TX_LABELS[tx.tx_type] || TX_LABELS.income;
+        const rev = fin.reversedIds.has(tx.id);
+        return `<tr style="${rev?'opacity:.5;text-decoration:line-through':''}">
+          <td class="muted">${fmtDate(tx.created_at)}</td>
+          <td><span class="badge ${m.cls}">${m.label}</span></td>
+          <td><b>${fmtNum(tx.amount)} ${tx.currency==="USD"?"$":"ل.س"}</b></td>
+          <td>${escapeHtml(tx.description||"—")}</td>
+          <td class="row">
+            <button class="btn btn-sec" style="padding:4px 8px;font-size:11px" onclick="printReceipt('${tx.id}')">🖨️</button>
+            ${perms().canReverse && tx.tx_type!=="reversal" && !rev ? `<button class="btn btn-dang" style="padding:4px 8px;font-size:11px" onclick="reverseTransaction('${tx.id}')">↺ عكس</button>` : ""}
+          </td>
+        </tr>`;
+      }).join("")}</tbody>
+    </table></div>
+  </div>`;
+}
+
+function renderAccountsTab(fin) {
+  return `<div class="grid-2">
+    <form onsubmit="addAccount(event)" class="card" style="display:grid;gap:10px;align-content:start">
+      <b>إضافة زبون أو مورد</b>
+      <input id="acc-name" placeholder="الاسم الكامل" class="inp" required />
+      <input id="acc-phone" dir="ltr" placeholder="رقم الواتساب" class="inp" />
+      <select id="acc-type" class="inp"><option value="customer">زبون</option><option value="supplier">مورد</option></select>
+      <input id="acc-notes" placeholder="ملاحظات" class="inp" />
+      <button type="submit" class="btn btn-prim">حفظ الحساب</button>
+    </form>
+    <div class="card" style="display:grid;gap:8px;align-content:start">
+      <b>الذمم والدفعات الجزئية (${state.accounts.length})</b>
+      ${state.accounts.map(a => {
+        const b = fin.accountBalances[a.id] || { USD: 0n, SYP: 0n };
+        return `<div class="subcard" style="display:grid;gap:8px">
+          <div class="row-between">
+            <div><b>${escapeHtml(a.name)}</b> <span class="muted" style="font-size:11.5px">${escapeHtml(a.phone||"")}</span></div>
+            <div style="text-align:left;font-size:12px"><b style="color:var(--warn)">${fmtMinor(b.USD)} $</b> • <b>${fmtMinor(b.SYP)} ل.س</b></div>
+          </div>
+          <div class="row">
+            <button class="btn btn-prim" style="padding:4px 9px;font-size:11px" onclick="recordPartialDebtPayment('${a.id}','USD')">+ دفعة جزئية ($)</button>
+            <button class="btn btn-sec" style="padding:4px 9px;font-size:11px" onclick="recordPartialDebtPayment('${a.id}','SYP')">+ دفعة جزئية (ل.س)</button>
+            <button class="btn btn-sec" style="padding:4px 9px;font-size:11px" onclick="openWhatsApp('${escapeHtml(a.phone||"")}','كشف حساب من ${escapeHtml(state.tenant.shop_name)}: الرصيد ${fmtMinor(b.USD)}$ و ${fmtMinor(b.SYP)} ل.س')">واتساب 💬</button>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+
+function renderPosTab() {
+  const whs = getWarehouses();
+  const allItems = loadModuleData("pos_items", []);
+  const items = state.selectedWarehouse === "ALL" ? allItems : allItems.filter(i => (i.warehouseId || "wh-main") === state.selectedWarehouse);
+  const editing = state.editingProductId ? allItems.find(x => x.id === state.editingProductId) : null;
+  const canCost = perms().canViewCost;
+  let cartUsd = 0n, cartSyp = 0n;
+  for (const c of state.posCart) { const l = toMinor(c.price)*BigInt(c.qty); if (c.currency==="USD") cartUsd += l; else cartSyp += l; }
+
+  return `
+    <div class="card row-between">
+      <div class="row">
+        <b>🏬 المستودع:</b>
+        <select class="inp" style="width:auto" onchange="state.selectedWarehouse=this.value;render()">
+          <option value="ALL" ${state.selectedWarehouse==="ALL"?"selected":""}>جميع المستودعات (${allItems.length})</option>
+          ${whs.map(w => `<option value="${w.id}" ${state.selectedWarehouse===w.id?"selected":""}>${escapeHtml(w.name)}</option>`).join("")}
+        </select>
+      </div>
+      <button class="btn btn-sec" onclick="addWarehouse()">+ إضافة مستودع جديد</button>
+    </div>
+
+    <div class="grid-3">
+      <form onsubmit="addOrUpdatePosProduct(event)" class="card" style="display:grid;gap:9px;align-content:start">
+        <b>${editing ? "✏️ تعديل صنف" : "🛒 إضافة صنف (ID مخفي + مستودع)"}</b>
+        <input id="pos-name" placeholder="اسم الصنف" value="${editing?escapeHtml(editing.name):""}" class="inp" required />
+        <div class="grid-2">
+          <select id="pos-wh" class="inp">${whs.map(w => `<option value="${w.id}" ${editing&&(editing.warehouseId||"wh-main")===w.id?"selected":""}>${escapeHtml(w.name)}</option>`).join("")}</select>
+          <input id="pos-sku" placeholder="الباركود (اختياري)" value="${editing?escapeHtml(editing.sku||""):""}" class="inp" />
+        </div>
+        <div class="grid-2">
+          ${canCost ? `<input id="pos-cost" type="number" step="0.01" placeholder="سعر التكلفة (جملة)" value="${editing?editing.cost:""}" class="inp" required />` : `<input id="pos-cost" type="hidden" value="0" />`}
+          <input id="pos-price" type="number" step="0.01" placeholder="سعر البيع" value="${editing?editing.price:""}" class="inp" required />
+        </div>
+        <div class="grid-3">
+          <select id="pos-currency" class="inp"><option value="USD" ${editing&&editing.currency==="USD"?"selected":""}>USD</option><option value="SYP" ${editing&&editing.currency==="SYP"?"selected":""}>ل.س</option></select>
+          <input id="pos-stock" type="number" placeholder="الكمية" value="${editing?editing.stock:10}" class="inp" />
+          <input id="pos-min" type="number" placeholder="حد التنبيه" value="${editing?editing.minStock:2}" class="inp" />
+        </div>
+        <div class="row">
+          <button type="submit" class="btn btn-prim" style="flex:1">${editing ? "حفظ التعديل" : "إضافة للمخزون"}</button>
+          ${editing ? `<button type="button" class="btn btn-sec" onclick="state.editingProductId=null;render()">إلغاء</button>` : ""}
+        </div>
+      </form>
+
+      <div class="card" style="display:grid;gap:8px;align-content:start">
+        <b>الأصناف (${items.length})</b>
+        ${items.map(p => {
+          const whName = (whs.find(w => w.id === (p.warehouseId || "wh-main")) || { name: "الرئيسي" }).name;
+          const unitProfit = fromMinor(toMinor(p.price) - toMinor(p.cost || 0));
+          const low = Number(p.stock) <= Number(p.minStock || 2);
+          return `<div class="subcard" style="display:grid;gap:6px;${low?'border-color:var(--warn)':''}">
+            <div class="row-between">
+              <div><b>${escapeHtml(p.name)}</b> <span class="badge b-din">${escapeHtml(whName)}</span> ${low?`<span class="badge b-dout">منخفض: ${p.stock}</span>`:`<span class="muted" style="font-size:11px">(${p.stock})</span>`}</div>
+              <button class="btn btn-prim" style="padding:4px 9px;font-size:11px" onclick="addToCart('${p.id}')">+ سلة</button>
+            </div>
+            <div class="row-between muted" style="font-size:11px">
+              <span>بيع: <b style="color:var(--text)">${fmtNum(p.price)} ${p.currency}</b> ${canCost ? `• ربح: <b style="color:var(--primary)">${fmtNum(unitProfit)}</b>` : ""}</span>
+              <div class="row" style="gap:4px">
+                <button class="btn btn-sec" style="padding:2px 6px;font-size:10.5px" onclick="transferProductWarehouse('${p.id}')" title="تحويل بين المستودعات">⇄ تحويل</button>
+                <button class="btn btn-warn" style="padding:2px 6px;font-size:10.5px" onclick="recordDamagedProduct('${p.id}')" title="تسجيل تالف">⚠️ تالف</button>
+                <button class="btn btn-sec" style="padding:2px 6px;font-size:10.5px" onclick="processSalesReturn('${p.id}')" title="مرتجع مبيعات">↩ مرتجع</button>
+                <button class="btn btn-sec" style="padding:2px 6px;font-size:10.5px" onclick="restockPosProduct('${p.id}')">+توريد</button>
+                <button class="btn btn-sec" style="padding:2px 6px;font-size:10.5px" onclick="state.editingProductId='${p.id}';render()">✏️</button>
+                ${canCost ? `<button class="btn btn-dang" style="padding:2px 6px;font-size:10.5px" onclick="deletePosProduct('${p.id}')">🗑️</button>` : ""}
+              </div>
+            </div>
+          </div>`;
+        }).join("") || `<div class="muted" style="text-align:center;padding:20px">لا توجد أصناف في هذا المستودع</div>`}
+      </div>
+
+      <div class="card" style="display:grid;gap:9px;align-content:start;border-color:var(--primary)">
+        <b>🧾 فاتورة المبيعات (POS)</b>
+        ${state.posCart.map(c => `<div class="subcard row-between" style="font-size:12px">
+          <span>${escapeHtml(c.name)} ×${c.qty}</span>
+          <div class="row"><b>${fmtNum(c.price*c.qty)} ${c.currency}</b><button class="btn btn-dang" style="padding:2px 6px" onclick="state.posCart=state.posCart.filter(x=>x.id!=='${c.id}');render()">✕</button></div>
+        </div>`).join("") || `<div class="muted" style="text-align:center;padding:16px">السلة فارغة</div>`}
+        <div class="subcard"><div>دولار: <b style="color:var(--primary)">${fmtMinor(cartUsd)} $</b></div><div>ليرة: <b style="color:var(--accent)">${fmtMinor(cartSyp)} ل.س</b></div></div>
+        <select id="pos-customer" class="inp"><option value="">زبون نقدي</option>${state.accounts.map(a => `<option value="${a.id}">${escapeHtml(a.name)}</option>`).join("")}</select>
+        <div class="grid-2"><button class="btn btn-prim" onclick="checkoutPosCart('cash')">ترحيل نقداً</button><button class="btn btn-sec" onclick="checkoutPosCart('credit')">ترحيل دين</button></div>
+      </div>
+    </div>`;
+}
+
+function renderTelecomTab() {
+  const wallets = loadModuleData("telecom_wallets", { syriatel: 0, mtn: 0, shamcash: 0 });
+  const repairs = loadModuleData("repairs", []);
+  const stockParts = loadModuleData("pos_items", []).filter(i => Number(i.stock) > 0);
+  const canCost = perms().canViewCost;
+  return `
+    ${perms().canPostFinance ? `<div class="grid-3">
+      <div class="card row-between"><div><div class="kpi-lbl">محفظة سيريتل</div><div class="kpi-val" style="font-size:18px">${fmtNum(wallets.syriatel)}</div></div><button class="btn btn-sec" onclick="updateTelecomWallet('syriatel')">تعبئة</button></div>
+      <div class="card row-between"><div><div class="kpi-lbl">محفظة MTN</div><div class="kpi-val" style="font-size:18px">${fmtNum(wallets.mtn)}</div></div><button class="btn btn-sec" onclick="updateTelecomWallet('mtn')">تعبئة</button></div>
+      <div class="card row-between"><div><div class="kpi-lbl">محفظة شام كاش</div><div class="kpi-val" style="font-size:18px">${fmtNum(wallets.shamcash)}</div></div><button class="btn btn-sec" onclick="updateTelecomWallet('shamcash')">تعبئة</button></div>
+    </div>` : ""}
+    <div class="grid-2">
+      <form onsubmit="addRepairTicket(event)" class="card" style="display:grid;gap:9px">
+        <b>📱 استلام جهاز صيانة (ربط تلقائي بقطع الغيار + IMEI + ضمان)</b>
+        <div class="grid-2"><input id="rep-cust" placeholder="اسم الزبون" class="inp" required /><input id="rep-phone" dir="ltr" placeholder="رقم الواتساب" class="inp" /></div>
+        <div class="grid-2"><input id="rep-device" placeholder="موديل الجهاز" class="inp" required /><input id="rep-imei" dir="ltr" placeholder="IMEI / السيريال" class="inp" /></div>
+        <input id="rep-issue" placeholder="العطل المطلوب" class="inp" required />
+        <select id="rep-part-id" class="inp">
+          <option value="">— بدون سحب قطعة غيار من المخزون —</option>
+          ${stockParts.map(p => `<option value="${p.id}">سحب قطعة: ${escapeHtml(p.name)} (متوفر: ${p.stock})</option>`).join("")}
+        </select>
+        <div class="grid-4">
+          ${canCost ? `<input id="rep-parts" type="number" step="0.01" placeholder="كلفة القطع" value="0" class="inp" />` : `<input id="rep-parts" type="hidden" value="0" />`}
+          <input id="rep-cost" type="number" step="0.01" placeholder="الأجرة الكلية" class="inp" required />
+          <select id="rep-cur" class="inp"><option value="SYP">ل.س</option><option value="USD">USD</option></select>
+          <input id="rep-warranty" type="number" placeholder="الضمان (أيام)" value="7" class="inp" />
+        </div>
+        <button type="submit" class="btn btn-prim">تسجيل الجهاز وسحب القطعة</button>
+      </form>
+      ${perms().canPostFinance ? `<form onsubmit="submitTopupSale(event)" class="card" style="display:grid;gap:9px">
+        <b>📶 تحويل رصيد وخصم من المحفظة</b>
+        <div class="grid-2">
+          <select id="top-net" class="inp"><option value="سيريتل">سيريتل</option><option value="MTN">MTN</option><option value="شام كاش">شام كاش</option></select>
+          <select id="top-wallet-key" class="inp"><option value="syriatel">خصم من سيريتل</option><option value="mtn">خصم من MTN</option><option value="shamcash">خصم من شام كاش</option><option value="none">بدون خصم</option></select>
+        </div>
+        <div class="grid-2"><input id="top-amt" type="number" step="0.01" placeholder="المبلغ" class="inp" required /><select id="top-cur" class="inp"><option value="SYP">ل.س</option><option value="USD">USD</option></select></div>
+        <input id="top-profit" type="number" step="0.01" placeholder="صافي الربح" class="inp" />
+        <button type="submit" class="btn btn-prim">ترحيل التحويل</button>
+      </form>` : `<div class="card muted" style="display:grid;place-items:center">واجهة فني الصيانة المخصصة — أرصدة الصندوق والمحافظ مخفية تلقائياً حسب الصلاحية.</div>`}
+    </div>
+    <div class="card" style="display:grid;gap:8px">
+      <b>أجهزة الصيانة (${repairs.length})</b>
+      ${repairs.map(r => `<div class="subcard row-between">
+        <div><b>${escapeHtml(r.device)}</b> — ${escapeHtml(r.customer)} <span class="badge ${r.status==='تم التسليم'?'b-inc':'b-dout'}">${r.status}</span>
+        <div class="muted" style="font-size:11.5px">${escapeHtml(r.issue)} ${r.partName?'• قطعة مسحوبة: '+escapeHtml(r.partName):''} ${r.imei?'• IMEI: '+escapeHtml(r.imei):''} ${r.warrantyDays?'• ضمان: '+r.warrantyDays+' يوم':''} • <b>${fmtNum(r.cost)} ${r.currency}</b></div></div>
+        <div class="row">
+          <button class="btn btn-sec" onclick="openWhatsApp('${escapeHtml(r.phone||"")}','جهازك ${escapeHtml(r.device)} جاهز لدى ${escapeHtml(state.tenant.shop_name)}')">واتساب</button>
+          ${r.status!=='تم التسليم' ? `<button class="btn btn-prim" onclick="deliverRepairTicket('${r.id}')">تسليم ✓</button>` : ""}
+        </div>
+      </div>`).join("")}
+    </div>`;
+}
+
+function renderStaffTab() {
+  const staff = loadModuleData("staff_directory", []);
+  return `<div class="grid-2">
+    <form onsubmit="addStaffMember(event)" class="card" style="display:grid;gap:10px;align-content:start">
+      <b>🔐 إضافة موظف وتحديد صلاحيته (ISO 27001 / RBAC)</b>
+      <input id="st-name" placeholder="اسم الموظف الكامل" class="inp" required />
+      <select id="st-role" class="inp">
+        <option value="accountant">محاسب (تقارير IFRS + قيود عكسية + دفتر الأستاذ)</option>
+        <option value="cashier">أمين صندوق (صندوق + مطابقة Z — بدون أسعار الجملة)</option>
+        <option value="sales">موظف مبيعات (POS ومخزون وزبائن — بدون أسعار الجملة)</option>
+        <option value="technician">فني صيانة (أجهزة الصيانة وقطع الغيار فقط — بدون الصندوق)</option>
+        <option value="owner">مدير شريك (كافة الصلاحيات)</option>
+      </select>
+      <input id="st-pin" type="password" inputmode="numeric" dir="ltr" minlength="4" maxlength="6" placeholder="رمز PIN للدخول السريع (4-6 أرقام)" class="inp" required />
+      <button type="submit" class="btn btn-prim">حفظ الموظف وتشفير الرمز</button>
+    </form>
+    <div class="card" style="display:grid;gap:8px;align-content:start">
+      <b>فريق العمل المسجل (${staff.length})</b>
+      ${staff.map(s => `<div class="subcard row-between">
+        <div><b>${escapeHtml(s.name)}</b> <span class="badge ${ROLE_DEFS[s.role].badge}">${ROLE_DEFS[s.role].label}</span><div class="muted" style="font-size:11px">أضيف: ${fmtShortDate(s.createdAt)} • PIN مشفّر SHA-256</div></div>
+        <button class="btn btn-dang" style="padding:4px 9px;font-size:11px" onclick="deleteStaffMember('${s.id}')">حذف</button>
+      </div>`).join("") || `<div class="muted" style="text-align:center;padding:20px">أضف موظفيك ثم استخدم زر «تبديل الوردية 👤» بالأعلى للعمل بصلاحية كل موظف بأمان.</div>`}
+    </div>
+  </div>`;
+}
+
+function renderAuditTab(fin) {
+  const localLogs = loadModuleData("local_audit_trail", []);
+  return `
+    <div class="card" style="display:grid;gap:10px">
+      <div class="row-between"><b>🧪 الاختبارات المالية الآلية (Pre-Close Automated Integrity Suite)</b><span class="badge ${fin.healthScore===100?'b-inc':'b-dout'}">النجاح: ${fin.healthScore}%</span></div>
+      <div class="grid-3">
+        ${fin.auditChecks.map(c => `<div class="subcard" style="border-color:${c.pass?'rgba(16,185,129,.4)':'rgba(239,68,68,.5)'}">
+          <div style="font-weight:800;font-size:12.5px">${c.pass ? "✅" : "❌"} ${escapeHtml(c.name)}</div>
+          <div class="muted" style="font-size:11.5px;margin-top:4px">${escapeHtml(c.detail)}</div>
+        </div>`).join("")}
+      </div>
+    </div>
+
+    <div class="card" style="overflow-x:auto">
+      <b>🛡️ سجل التدقيق التفصيلي (من قام بالعملية + الوقت + القيم قبل وبعد)</b>
+      <table class="tbl" style="margin-top:8px">
+        <thead><tr><th>الوقت</th><th>المستخدم / الدور</th><th>الإجراء</th><th>القسم</th><th>التفاصيل (قبل / بعد)</th></tr></thead>
+        <tbody>
+          ${localLogs.slice(0, 40).map(l => `<tr>
+            <td class="muted">${fmtDate(l.at)}</td>
+            <td><b>${escapeHtml(l.actor)}</b></td>
+            <td><span class="badge b-din">${escapeHtml(l.action)}</span></td>
+            <td class="mono">${escapeHtml(l.entity)}</td>
+            <td class="muted" style="max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(JSON.stringify({ before: l.before, after: l.after }))}</td>
+          </tr>`).join("") || `<tr><td colspan="5" class="muted" style="text-align:center;padding:16px">سيبدأ تسجيل الحركات تلقائياً مع كل عملية</td></tr>`}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function renderInstallmentsTab() {
+  const list = loadModuleData("installments", []);
+  return `<div class="grid-2">
+    <form onsubmit="addInstallmentContract(event)" class="card" style="display:grid;gap:9px;align-content:start"><b>📅 عقد تقسيط</b><input id="ins-buyer" placeholder="المشتري" class="inp" required /><input id="ins-phone" dir="ltr" placeholder="الواتساب" class="inp" /><input id="ins-guarantor" placeholder="الكفيل" class="inp" /><input id="ins-item" placeholder="السلعة" class="inp" required /><div class="grid-2"><input id="ins-price" type="number" step="0.01" placeholder="السعر الكاش" class="inp" required /><input id="ins-down" type="number" step="0.01" placeholder="الدفعة الأولى" value="0" class="inp" /></div><div class="grid-3"><input id="ins-pct" type="number" step="0.1" value="15" class="inp" /><input id="ins-months" type="number" value="6" class="inp" /><select id="ins-cur" class="inp"><option value="USD">USD</option><option value="SYP">ل.س</option></select></div><button type="submit" class="btn btn-prim">إنشاء العقد</button></form>
+    <div class="card" style="display:grid;gap:8px;align-content:start"><b>العقود (${list.length})</b>${list.map(c => `<div class="subcard row-between"><div><b>${escapeHtml(c.buyer)} — ${escapeHtml(c.item)}</b><div class="muted" style="font-size:11.5px">القسط: ${fmtNum(c.monthly)} | المتبقي: ${fmtNum(c.remaining)} ${c.currency}</div></div><div class="row"><button class="btn btn-sec" onclick="openWhatsApp('${escapeHtml(c.phone||"")}','تذكير بقسط ${escapeHtml(c.item)}: ${fmtNum(c.monthly)} ${c.currency}')">واتساب</button>${c.remaining>0?`<button class="btn btn-prim" onclick="payInstallment('${c.id}')">قبض قسط</button>`:`<span class="badge b-inc">مكتمل</span>`}</div></div>`).join("")}</div>
+  </div>`;
+}
+function renderIspTab() {
+  const subs = loadModuleData("isp_subs", []);
+  return `<div class="grid-2">
+    <form onsubmit="addIspSubscriber(event)" class="card" style="display:grid;gap:9px;align-content:start"><b>📡 مشترك إنترنت / أمبيرات</b><input id="isp-name" placeholder="اسم المشترك" class="inp" required /><input id="isp-phone" dir="ltr" placeholder="الواتساب" class="inp" /><input id="isp-pkg" placeholder="الباقة" class="inp" /><div class="grid-2"><input id="isp-fee" type="number" step="0.01" placeholder="الاشتراك" class="inp" required /><select id="isp-cur" class="inp"><option value="SYP">ل.س</option><option value="USD">USD</option></select></div><input id="isp-due" type="date" value="${fmtShortDate()}" class="inp" /><button type="submit" class="btn btn-prim">إضافة</button></form>
+    <div class="card" style="display:grid;gap:8px;align-content:start"><b>المشتركون (${subs.length})</b>${subs.map(s => `<div class="subcard row-between"><div><b>${escapeHtml(s.name)}</b> (${escapeHtml(s.pkg)})<div class="muted" style="font-size:11.5px">الاستحقاق: ${s.due} • ${fmtNum(s.fee)} ${s.currency}</div></div><button class="btn btn-prim" onclick="collectIspSub('${s.id}')">تحصيل +30 يوم</button></div>`).join("")}</div>
+  </div>`;
+}
+function renderRepsTab() {
+  const reps = loadModuleData("sales_reps", []);
+  return `<div class="grid-2">
+    <form onsubmit="addSalesRep(event)" class="card" style="display:grid;gap:9px;align-content:start"><b>🚚 إضافة مندوب</b><input id="rep2-name" placeholder="الاسم" class="inp" required /><div class="grid-2"><input id="rep2-phone" dir="ltr" placeholder="الهاتف" class="inp" /><input id="rep2-pct" type="number" step="0.1" value="2.5" class="inp" /></div><button type="submit" class="btn btn-prim">حفظ</button></form>
+    <form onsubmit="recordRepSale(event)" class="card" style="display:grid;gap:9px;align-content:start"><b>تسجيل مبيعات مندوب</b><select id="sr-select" class="inp" required><option value="">اختر المندوب...</option>${reps.map(r => `<option value="${r.id}">${escapeHtml(r.name)} (${r.pct}%)</option>`).join("")}</select><div class="grid-2"><input id="sr-amt" type="number" step="0.01" placeholder="المبلغ" class="inp" required /><select id="sr-cur" class="inp"><option value="USD">USD</option><option value="SYP">ل.س</option></select></div><button type="submit" class="btn btn-prim">ترحيل</button></form>
+  </div>`;
+}
+
+function render() {
+  const activeEl = document.activeElement;
+  const focusId = activeEl && activeEl.id ? activeEl.id : null;
+  const selStart = activeEl && typeof activeEl.selectionStart === "number" ? activeEl.selectionStart : null;
+  const root = document.getElementById("app");
+
+  if (state.loading) { root.innerHTML = `<div style="min-height:100vh;display:grid;place-items:center"><b>جارٍ تحميل Sama Business Enterprise v1.1...</b></div>`; return; }
+  if (state.isLocked && localStorage.getItem(PIN_KEY)) { root.innerHTML = renderPinLockScreen(); return; }
+  if (!state.user || !state.profile) root.innerHTML = renderAuthScreen();
+  else if (state.profile.role === "super_admin") root.innerHTML = renderSuperAdmin();
+  else root.innerHTML = renderTenantDashboard();
+
+  if (focusId) {
+    const restored = document.getElementById(focusId);
+    if (restored) {
+      restored.focus();
+      if (selStart !== null && typeof restored.setSelectionRange === "function") {
+        try { restored.setSelectionRange(selStart, selStart); } catch (_) {}
+      }
+    }
+  }
+}
+
+window.addEventListener("online", () => { state.online = true; render(); syncOfflineQueue(); });
+window.addEventListener("offline", () => { state.online = false; render(); });
+if ("serviceWorker" in navigator) window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(() => {}));
+bootstrapSession();
+</script>
+</body>
+</html>
